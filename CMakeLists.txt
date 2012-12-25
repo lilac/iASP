@@ -59,7 +59,7 @@ if(HAS_WARN_NO_UNUSED_VARIABLE)
 endif()
 
 set(Boost_USE_MULTITHREADED OFF CACHE STRING "Whether to Use multi-threaded boost libraries")
-find_package(Boost REQUIRED filesystem system)
+find_package(Boost REQUIRED filesystem system regex)
 include_directories(${Boost_INCLUDE_DIRS})
 if(WITH_LUA STREQUAL "system")
 	find_package(LUA51 REQUIRED)

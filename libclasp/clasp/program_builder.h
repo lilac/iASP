@@ -1,18 +1,18 @@
-// 
+//
 // Copyright (c) 2006-2007, Benjamin Kaufmann
-// 
-// This file is part of Clasp. See http://www.cs.uni-potsdam.de/clasp/ 
-// 
+//
+// This file is part of Clasp. See http://www.cs.uni-potsdam.de/clasp/
+//
 // Clasp is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
 // (at your option) any later version.
-// 
+//
 // Clasp is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with Clasp; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -73,7 +73,7 @@ public:
 	}
 	//! marks v as equivalent to both a body and an atom
 	void  setAtomBody(Var v) { setFlag(v, eq_f); }
-	//! adds to s all variables contained in this var list that are >= startVar 
+	//! adds to s all variables contained in this var list that are >= startVar
 	void  addTo(Solver& s, Var startVar);
 	//! returns true if this var list is empty
 	bool empty() const { return vars_.size() == 1; }
@@ -81,7 +81,7 @@ public:
 	VarVec::size_type size() const { return vars_.size(); }
 	//! clears the var list
 	void clear() { Vars().swap(vars_); add(Var_t::atom_var); }
-	
+
 	//! removes all vars > startVar
 	void shrink(Var startVar) {
 		startVar = std::max(Var(1), startVar);
@@ -151,7 +151,7 @@ struct PreproStats {
 	uint32 ufsNodes;  /**< How many nodes in the positive BADG? */
 	uint32 rules[7];  /**< Number of rules. rules{0]: sum, rules[RuleType rt]: rules of type rt */
 	uint32 eqs[3];    /**< How many equivalences?: eqs[0]: Atom-Atom, eqs[1]: Body-Body, eqs[2]: Other */
-	struct TrStats {  
+	struct TrStats {
 		TrStats() { std::memset(this, 0, sizeof(TrStats)); }
 		TrStats(const TrStats& o) : auxAtoms(o.auxAtoms) {
 			for (int i = 0; i != sizeof(rules)/sizeof(uint32); ++i) {
@@ -202,7 +202,7 @@ public:
 	 */
 	//@{
 
-	//! Starts the definition of a logic program. 
+	//! Starts the definition of a logic program.
 	/*!
 	 * This function shall be called exactly once before a new program is defined.
 	 * It discards any previously added program.
@@ -244,15 +244,15 @@ public:
 	 *    - marked as frozen in step i and solely defined in step i+k OR,
 	 *    - forced to false by a acompute statement in step 0
 	 *
-	 * \post The program is no longer frozen and calling program mutating functions is valid again. 
+	 * \post The program is no longer frozen and calling program mutating functions is valid again.
 	 * \throws std::logic_error precondition is violated.
 	 */
 	ProgramBuilder& updateProgram();
 
 	//! Finishes the definition of the logic program (or its current increment).
 	/*!
-	 * Applies program mutating operations issued in the current step and transforms 
-	 * the new program into the solver's internal representation. 
+	 * Applies program mutating operations issued in the current step and transforms
+	 * the new program into the solver's internal representation.
 	 *
 	 * \param solver The solver object in which the representation of the lp should be stored.
 	 * \param finalizeSolver if true, endProgram() calls solver.endAddConstraints()
@@ -260,13 +260,13 @@ public:
 	 * \return false if the program is initially conflicting, true otherwise.
 	 *
 	 * \post
-	 *  - If true is returned, the program is considered to be "frozen" and calling 
+	 *  - If true is returned, the program is considered to be "frozen" and calling
 	 *    program mutating functions is invalid until the next call to updateProgram().
-	 *  - If false is returned, the state of the object is undefined and startProgram() 
-	 *    and disposeProgram() are the only remaining valid operations. 
-	 *  . 
+	 *  - If false is returned, the state of the object is undefined and startProgram()
+	 *    and disposeProgram() are the only remaining valid operations.
+	 *  .
 	 *
-	 * \note To load the same program into different solvers, 
+	 * \note To load the same program into different solvers,
 	 *       call endProgram for each solver.
 	 */
 	bool endProgram(Solver& solver, bool finalizeSolver, bool backprop = false);
@@ -289,89 +289,90 @@ public:
 	 */
 	void disposeProgram(bool forceFullDispose);
 	//@}
-	
+
 	/*!
 	 * \name Program mutating functions
-	 * 
-	 * Functions in this group shall only be called if the program is currently not 
-	 * frozen. That is, only between the call to startProgram() (resp. updateProgram() if in 
-	 * incremental setting) and endProgram(). A std::logic_error is raised if this precondition is violated. 
+	 *
+	 * Functions in this group shall only be called if the program is currently not
+	 * frozen. That is, only between the call to startProgram() (resp. updateProgram() if in
+	 * incremental setting) and endProgram(). A std::logic_error is raised if this precondition is violated.
 	 *
 	 */
 	//@{
 
 	//! Adds a new atom to the program.
 	/*!
-	 * \return The new atom's id. 
+     * \param unsafe true if this atom can be supported by upper level rules in iASP.
+	 * \return The new atom's id.
 	 */
-	Var newAtom();
+	Var newAtom(bool unsafe = false);
 
 	//! Sets the name of the given atom and adds it to the program's symbol table.
 	/*!
-	 * \pre 
+	 * \pre
 	 *   - The atom is either not yet known or was added in the current step (atomId >= startAtom()).
-	 *   - The atom was not yet added to the symbol table, i.e. 
+	 *   - The atom was not yet added to the symbol table, i.e.
 	 *     setAtomName() is called at most once for an atom.
-	 *   . 
+	 *   .
 	 * \param atomId The id of the atom for which a name should be set
 	 * \param name The new name of the atom with the given id.
-	 * \note If atomId is not yet known, an atom with the given id is implicitly created. 
+	 * \note If atomId is not yet known, an atom with the given id is implicitly created.
 	 *
-	 * \throws RedefinitionError precondition is violated. 
+	 * \throws RedefinitionError precondition is violated.
 	 * \throws std::logic_error  program is frozen.
 	 */
 	ProgramBuilder& setAtomName(Var atomId, const char* name);
 
-	//! Forces the atom's truth-value to value. 
+	//! Forces the atom's truth-value to value.
 	/*!
 	 * \pre The atom is either not yet known, false, or an atom from the current step.
 	 * \param atomId Id of the Atom for which a truth-value should be set.
 	 * \param pos If true, atom is set to true (forced to be in every answer set). Otherwise
 	 *            atom is set to false (not part of any answer set).
-	 * \note If atomId is not yet known, an atom with the given id is implicitly created. 
+	 * \note If atomId is not yet known, an atom with the given id is implicitly created.
 	 */
 	ProgramBuilder& setCompute(Var atomId, bool value);
 
-	//! Protects an otherwise undefined atom from preprocessing. 
+	//! Protects an otherwise undefined atom from preprocessing.
 	/*!
-	 * If the atom is defined in this or a previous step, the operation has no effect. 
-	 * \note If atomId is not yet known, an atom with the given id is implicitly created. 
+	 * If the atom is defined in this or a previous step, the operation has no effect.
+	 * \note If atomId is not yet known, an atom with the given id is implicitly created.
 	 */
 	ProgramBuilder& freeze(Var atomId);
 
-	//! Removes any protection from the given atom. 
+	//! Removes any protection from the given atom.
 	/*!
-	 * If the atom is defined in this or a previous step, the operation has no effect. 
+	 * If the atom is defined in this or a previous step, the operation has no effect.
 	 * \note
-	 *   - The effect is logically equivalent to adding a rule atomId :- false. 
-	 *   - A call to unfreeze() always overwrites a call to freeze() even if the 
+	 *   - The effect is logically equivalent to adding a rule atomId :- false.
+	 *   - A call to unfreeze() always overwrites a call to freeze() even if the
 	 *     latter comes after the former
-	 *   . 
+	 *   .
 	 */
 	ProgramBuilder& unfreeze(Var atomId);
 
 	//! Adds the given rule to the program.
 	/*!
-	 * \pre The head of the rule does not contain an atom defined in a 
-	 *      previous incremental step. 
+	 * \pre The head of the rule does not contain an atom defined in a
+	 *      previous incremental step.
 	 *
 	 * Simplifies the given rule and adds it to the program if it
-	 * is neither tautological (e.g. a :- a) nor contradictory (e.g. a :- b, not b). 
-	 * Atoms in the simplified rule that are not yet known are implicitly created. 
+	 * is neither tautological (e.g. a :- a) nor contradictory (e.g. a :- b, not b).
+	 * Atoms in the simplified rule that are not yet known are implicitly created.
 	 *
-	 * \throws RedefinitionError if the precondition is violated. 
+	 * \throws RedefinitionError if the precondition is violated.
 	 * \note If the head of the simplified rule mentions an atom from a previous step,
-	 *       that atom shall either be frozen or false. In the former case, 
-	 *       unfreeze() is implicitly called. In the latter case, the rule is interpreted 
-	 *       as an integrity constraint. 
+	 *       that atom shall either be frozen or false. In the former case,
+	 *       unfreeze() is implicitly called. In the latter case, the rule is interpreted
+	 *       as an integrity constraint.
 	 */
 	ProgramBuilder& addRule(PrgRule& r);
-	
+
 	//@}
 
 	/*!
 	 * \name Rule creation functions
-	 * 
+	 *
 	 * Functions in this group may be used to construct logic program rules.
 	 * The construction of a rule must start with a call to startRule() and
 	 * ends with a call to endRule(). Functions for adding elements to a
@@ -381,7 +382,7 @@ public:
 	//@{
 
 	//! Starts the construction of a rule.
-	/*! 
+	/*!
 	 * \param t The type of the new rule.
 	 * \param bound The lower bound (resp. min weight) of the rule to be created.
 	 *
@@ -413,7 +414,7 @@ public:
 		rule_.addHead(atomId);
 		return *this;
 	}
-	
+
 	//! Adds a subgoal to the currently active rule.
 	/*!
 	 * \pre atomId > 0 && weight >= 0
@@ -426,7 +427,7 @@ public:
 		rule_.addToBody(atomId, pos, weight);
 		return *this;
 	}
-	
+
 	//! Finishes the construction of the active rule and adds it to the program.
 	/*!
 	 * \see ProgramBuilder::addRule(PrgRule&);
@@ -434,9 +435,16 @@ public:
 	ProgramBuilder& endRule() {
 		return addRule(rule_);
 	}
-	
+
+    ProgramBuilder& setLevelVar(Var v) {
+        assert(incData_ && "incData_ is null");
+        incData_->levelVar_ = v;
+        return *this;
+    }
+
+    void setUnsafe(Var v);
 	//@}
-	
+
 	/*!
 	 * \name Query functions
 	 *
@@ -455,17 +463,19 @@ public:
 	//! Returns the internal literal that is associated with the given atom.
 	/*!
 	 * \pre atomId is a known atom
-	 * \return A literal that is valid in the current solving context. 
+	 * \return A literal that is valid in the current solving context.
 	 * \note Untill endProgram() is called, atoms from the current step are
 	 *       associated with the always-false literal negLit(0).
 	 * \throws std::logic_error if precondition is violated.
 	 */
 	Literal getLiteral(Var atomId) const;
-	//! Returns a vector of internal literals that, when assumed true, makes all frozen atoms false. 
+	//! Returns a vector of internal literals that, when assumed true, makes all frozen atoms false.
 	/*!
-	 * \pre The program is currently frozen. 
+	 * \pre The program is currently frozen.
 	 */
 	void    getAssumptions(LitVec& out) const;
+
+    Var     getLevelVar() const { return incData_?incData_->levelVar_:0; }
 	PreproStats stats;
 	//@}
 	// FOR TESTING
@@ -554,7 +564,10 @@ private:
 		uint32  startScc_;        // first scc of current iteration
 		VarVec  freeze_;          // list of frozen atoms
 		VarVec  unfreeze_;        // list of atom that are unfreezed in this iteration
-	}* incData_;                // additional state to handle incrementally defined programs 
+        uint32  startBody_;       // first body index of current level in body list.
+        VarVec  prevLevels_;	  // previous level vars.
+        Var     levelVar_;        // Auxiliary atom denoting current level in iASP.
+	}* incData_;                // additional state to handle incrementally defined programs
 	AtomIndex*       atomIndex_;// atom symbol table
 	typedef SingleOwnerPtr<DefaultUnfoundedCheck> Ufs;
 	Ufs              ufs_;      // Unfounded set checker to use if program is not tight
@@ -563,7 +576,6 @@ private:
 	bool             eqDfs_;    // use df-order during eq-preprocessing?
 	bool             normalize_;
 	bool             frozen_;   // is the program currently frozen?
-
 };
 
 
@@ -573,19 +585,19 @@ private:
  * has a literal and a value. Furthermore, once
  * strongly-connected components are identified, nodes
  * store their SCC-number. All trivial SCCs are represented
- * with the special Scc-number PrgNode::noScc. 
+ * with the special Scc-number PrgNode::noScc.
  */
 class PrgNode {
 public:
 	static const uint32 noScc = (1U << 28) - 1;
-	
+
 	//! creates a new node
 	/*!
 	 * \note The ctor creates a node that corresponds to a literal that is false
 	 */
-	explicit PrgNode(Literal lit = negLit(sentVar)) 
+	explicit PrgNode(Literal lit = negLit(sentVar))
 		: lit_(lit), root_(0), value_(value_free), scc_(noScc), eq_(0), seen_(0), ignore_(0), frozen_(0) {}
-	
+
 	//! returns true if node has an associated variable in a solver
 	/*!
 	 * If hasVar() returns false, the node is not relevant and must not be used any further.
@@ -598,7 +610,7 @@ public:
 
 	//! returns the value currently assigned to this node
 	ValueRep  value()     const { return value_; }
-	
+
 	//! returns the literal that must be true in order to fulfill the truth-value of this node
 	/*!
 	 * \note if value() == value_free, the special sentinel literal that is true
@@ -609,14 +621,14 @@ public:
 	 *  - if value() == value_true or value_weak_true : literal()
 	 *  - if value() == value_false: ~literal()
 	 */
-	Literal   trueLit()   const { 
+	Literal   trueLit()   const {
 		if (value_ != value_free) { return value_ == value_false ? ~lit_ : lit_; }
 		return Literal();
 	}
-	
+
 	//! returns the node's component number or PrgNode::noScc if node is trivially connected or sccs where not yet identified
 	uint32    scc()       const { return scc_; }
-	
+
 	//! returns true if this node is equivalent to some other node
 	/*!
 	 * If eq() is true, the node is no longer relevant and must not be used any further.
@@ -624,7 +636,7 @@ public:
 	 * root-node.
 	 */
 	bool      eq()        const { return eq_ != 0; }
-	
+
 	//! returns true if this node should be ignored during SCC checking
 	/*!
 	 * \note for bodies only: if ignore() is true, the body is known to be false and no longer relevant
@@ -635,17 +647,17 @@ public:
 	bool      frozen()    const { return frozen_ != 0; }
 
 	//! returns the id of the node to which this node is equivalent
-	/*! 
+	/*!
 	 * \pre eq() is true
 	 */
 	Var       eqNode()    const { assert(eq()); return root_; }
-	
+
 	//! returns the id of this node in the unfounded set checker
-	/*! 
+	/*!
 	 * \pre eq() is false
 	 */
 	Var       ufsNode()   const { assert(!eq()); return root_; }
-	
+
 	void    setLiteral(Literal x)   { lit_ = x; }
 	void    clearLiteral(bool clVal){ lit_ = negLit(sentVar); if (clVal) value_ = value_free; }
 	bool    setValue(ValueRep v)    {
@@ -654,14 +666,14 @@ public:
 			value_ = v;
 			return true;
 		}
-		return v == value_weak_true && value_ == value_true; 
+		return v == value_weak_true && value_ == value_true;
 	}
 	bool    mergeValue(PrgNode* rhs){
 		if (value_ != rhs->value()) {
 			if (value() == value_false || value() == value_true) {
 				return rhs->setValue(value());
 			}
-			return rhs->value() != value_free 
+			return rhs->value() != value_free
 				? setValue(rhs->value())
 				: rhs->setValue(value());
 		}
@@ -679,7 +691,7 @@ public:
 		root_   = nId;
 		if (atom) ignore_ = 1;
 	}
-	
+
 	/*!
 	 * \name SCC checking
 	 * Intended to be used only by the SCC checker
@@ -740,15 +752,15 @@ public:
 	 * \param prg     The program in which the new body is used
 	 */
 	static PrgBodyNode* create(uint32 id, const PrgRule& rule, const PrgRule::RData& rInfo, ProgramBuilder& prg);
-	
+
 	//! destroys a body node created via create(uint32 id, const PrgRule& rule, const PrgRule::RData& rInfo, ProgramBuilder& prg)
 	void destroy();
-	
+
 	//! returns the rule type that is implemented with this body
 	RuleType rtype() const;
 	//! returns true if this body is the body of a choice rule
 	bool isChoice() const { return type_ == CHOICE_BODY; }
-	
+
 	bool resetSupported() {
 		if (!extended()) {
 			return (extra_.unsupp = posSize()) == 0;
@@ -768,7 +780,7 @@ public:
 	//! returns true if the body node is supported.
 	/*!
 	 * A body of a basic- or choice-rule is supported, iff all of its positive subgoals are supported.
-	 * A body of a weight-rule is supported if the sum of the weights of the supported positive +
+	 * A body of a weight-rule is supported if the sum of the weights of the supported positive
 	 * the sum of the negative weights is >= lowerBound().
 	 */
 	bool isSupported() const { return !extended() ? extra_.unsupp <= 0 : extra_.ext->unsupp <= 0; }
@@ -781,7 +793,7 @@ public:
 	 *  .
 	 */
 	bool onPosPredSupported(Var /* v */);
-	
+
 	//! simplifies the body, i.e. its predecessors-lists
 	/*!
 	 * - removes true/false atoms from B+/B- resp.
@@ -802,14 +814,14 @@ public:
 	 *  - false if simplification detected a conflict
 	 */
 	bool simplifyBody(ProgramBuilder& prg, uint32 bodyId, std::pair<uint32, uint32>& hashes, Preprocessor& pre, bool strong);
-	
+
 	//! simplifies the heads of this body
 	/*!
 	 * Removes superfluous heads and sets the body to false if for some atom a
 	 * in the head of this body, Ta -> FB. In that case, all heads atoms are removed, because
 	 * a false body can't define an atom.
 	 * If strong is true, removes head atoms that are not associated with a variable.
-	 * \return 
+	 * \return
 	 *  - setValue(value_false) if setting a head of this body to true would
 	 *  make the body false (i.e. the body is a selfblocker)
 	 *  - true otherwise
@@ -823,7 +835,7 @@ public:
 	 * \return false on conflict
 	 */
 	bool toConstraint(Solver&, ClauseCreator& c, const ProgramBuilder& prg);
-	
+
 	//! returns the bound of this body
 	/*!
 	 * \note The bound of a basic- or choice-rule is the equal to the size of the body
@@ -840,20 +852,20 @@ public:
 	uint32 negSize() const { return size() - posSize(); }
 
 	//! returns the idx'th positive subgoal
-	/*! 
+	/*!
 	 * \pre idx < posSize()
 	 * \note first positive subgoal has index 0
 	 */
 	Var pos(uint32 idx) const { assert(idx < posSize()); return goals_[idx].var(); }
 
 	//! returns the idx'th negative subgoal
-	/*! 
+	/*!
 	 * \pre idx < negSize()
 	 * \note first negative subgoal has index 0
 	 */
 	Var neg(uint32 idx) const { assert(idx < negSize()); return goals_[posSize_+idx].var(); }
 
-	Literal goal(uint32 idx) const { 
+	Literal goal(uint32 idx) const {
 		assert(idx < size()); return goals_[idx];
 	}
 
@@ -863,10 +875,10 @@ public:
 	 * \param pos true for a positive, false for a negative subgoal
 	 */
 	weight_t weight(uint32 /* idx */, bool /* pos */) const;
-	
+
 	//! establishes set property for the heads of this body
 	void buildHeadSet();
-	
+
 	//! returns true if x is a head of this body
 	/*!
 	 * \pre buildHeadSet() was called
@@ -877,7 +889,7 @@ public:
 
 	//! returns true if *this and other are equivalent w.r.t their predecessors
 	bool equal(const PrgBodyNode& other) const;
-	
+
 	bool compatibleType(PrgBodyNode* other) const {
 		return type_ == other->type_
 			|| (!isChoice() && !other->isChoice());
@@ -921,7 +933,7 @@ private:
 	weight_t  weight(uint32 idx) const { return !hasWeights() ? 1 : extra_.ext->weights[idx]; }
 	weight_t  findWeight(Literal p, const AtomList& progAtoms) const;
 	uint32    findLit(Literal p, const AtomList& progAtoms) const;
-	
+
 	uint32    size_;          // |B|
 	uint32    posSize_  : 30; // |B+|
 	uint32    type_     :  2; // body type
@@ -935,12 +947,14 @@ private:
 //! An atom-node in a body-atom-dependency graph
 class PrgAtomNode : public PrgNode {
 public:
+    PrgAtomNode(bool unsafe_ = false): unsafe(unsafe_) {}
+
 	//! adds the atom-oriented nogoods to as a set of constraints to the solver.
 	/*
 	 * \return false on conflict
 	 */
 	bool toConstraint(Solver&, ClauseCreator& c, ProgramBuilder& prg);
-	
+
 	//! simplifies this atom, i.e. its predecessors-list
 	/*!
 	 * - removes false/irrelevant bodies
@@ -965,11 +979,15 @@ public:
 		posDep = a->posDep;
 		negDep = a->negDep;
 		preds  = a->preds;
+        unsafe = a->unsafe;
 	}
+
+	inline void setUnsafe() { unsafe = true; }
 
 	VarVec    posDep;     // Bodies in which this atom occurs positively
 	VarVec    negDep;     // Bodies in which this atom occurs negatively
 	VarVec    preds;      // Bodies having this atom as head
+    bool      unsafe;     // true if this atom is supported progressively
 };
 //@}
 }

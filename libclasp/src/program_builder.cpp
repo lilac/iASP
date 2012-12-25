@@ -77,7 +77,10 @@ bool PrgAtomNode::toConstraint(Solver& s, ClauseCreator& gc, ProgramBuilder& prg
 	Literal a = literal();
 	gc.start().add(~a);
 	prg.vars_.mark( ~a );
-	bool sat = false;
+    if (this->unsafe) {
+        gc.add(negLit(prg.getLevelVar()));
+    }
+    bool sat = false;
 	bool nant= !negDep.empty();
 	// consider only bodies which are part of the simplified program, i.e.
 	// are associated with a variable in the solver.
@@ -229,7 +232,7 @@ uint32 PrgBodyNode::reinitDeps(uint32 id, ProgramBuilder& prg) {
 		hash += hashId(-neg(i));
 		prg.resize(neg(i))->negDep.push_back(id);
 	}
-	for (uint32 i = 0; i != heads.size(); ++i) 
+	for (uint32 i = 0; i != heads.size(); ++i) {
 		prg.resize(heads[i])->preds.push_back(id);
 	}
 	return hash;
@@ -777,7 +780,7 @@ ProgramBuilder::ProgramBuilder()
 	, eqDfs_(false), normalize_(false), frozen_(true) { 
 }
 ProgramBuilder::~ProgramBuilder() { disposeProgram(true); }
-ProgramBuilder::Incremental::Incremental() : startAtom_(1), startVar_(1), startAux_(1), startScc_(0) {}
+ProgramBuilder::Incremental::Incremental() : startAtom_(1), startVar_(1), startAux_(1), startScc_(0), levelVar_(0) {}
 
 void ProgramBuilder::disposeProgram(bool force) {
 	// remove rules
@@ -859,12 +862,14 @@ ProgramBuilder& ProgramBuilder::updateProgram() {
 	check_precondition(frozen_ || !incData_, std::logic_error);
 	check_precondition(!atoms_.empty() && "startProgram() not called!", std::logic_error);
 	// delete bodies and clean up atoms
-	disposeProgram(false);
+	//disposeProgram(false);
+	VarVec().swap(initialSupp_);
 	if (!incData_)  { incData_ = new Incremental(); }
 	incData_->startVar_ = (uint32)vars_.size();
 	incData_->startAtom_= (uint32)atoms_.size();
 	incData_->startAux_ = (uint32)atoms_.size();
 	incData_->unfreeze_.clear();
+    incData_->startBody_ = (uint32)bodies_.size();
 	for (VarVec::iterator it = incData_->freeze_.begin(), end = incData_->freeze_.end(); it != end; ++it) {
 		atoms_[*it]->setIgnore(false);
 	}
@@ -879,16 +884,21 @@ bool ProgramBuilder::endProgram(Solver& solver, bool finalizeSolver, bool backpr
 		if (normalize_) { normalize(); }
 		stats.atoms = numAtoms() - (startAtom()-1);
 		stats.bodies= numBodies();
-		updateFrozenAtoms(solver);
+		//updateFrozenAtoms(solver);
 		frozen_ = true;
 		if (atoms_[0]->value() == value_true) { return false; }
 		Preprocessor p;
 		p.enableBackprop(backprop);
-		if (!p.preprocess(*this, eqIters_ != 0 ? Preprocessor::full_eq : Preprocessor::no_eq, eqIters_, eqDfs_)) {
+		if (!p.preprocess(*this, eqIters_ != 0 ? Preprocessor::body_eq : Preprocessor::no_eq, eqIters_, eqDfs_)) {
 			return false;
 		}
 		if (erMode_ == mode_transform_integ || erMode_ == mode_transform_dynamic) {
 			transformIntegrity(std::min(uint32(15000), uint32(numAtoms())<<1));
+		}
+		// Note: add level var.
+		if (incData_) {
+            if (incData_->levelVar_ != 0) incData_->prevLevels_.push_back(incData_->levelVar_);
+			incData_->levelVar_ = vars_.add(Var_t::atom_var);
 		}
 		vars_.addTo(solver, incData_ ? incData_->startVar_ : 1);
 		atomIndex_->endInit();
@@ -1004,9 +1014,9 @@ void ProgramBuilder::writeProgram(std::ostream& os) {
 // Program mutating functions
 /////////////////////////////////////////////////////////////////////////////////////////
 #define check_not_frozen() check_precondition(!frozen_ && "Can't update frozen program!", std::logic_error)
-Var ProgramBuilder::newAtom() {
+Var ProgramBuilder::newAtom(bool unsafe) {
 	check_not_frozen();
-	atoms_.push_back( new PrgAtomNode() );
+	atoms_.push_back( new PrgAtomNode(unsafe) );
 	return (Var) atoms_.size() - 1;
 }
 
@@ -1095,9 +1105,10 @@ Literal ProgramBuilder::getLiteral(Var atomId) const {
 void ProgramBuilder::getAssumptions(LitVec& out) const {
 	check_precondition(frozen_, std::logic_error);
 	if (incData_) {
-		for (VarVec::const_iterator it = incData_->freeze_.begin(), end = incData_->freeze_.end(); it != end; ++it) {
-			out.push_back( ~getLiteral(*it) );
+		for (VarVec::const_iterator it = incData_->prevLevels_.begin(), end = incData_->prevLevels_.end(); it != end; ++it) {
+			out.push_back( negLit(*it) );
 		}
+		out.push_back( posLit(incData_->levelVar_));
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -1122,7 +1133,7 @@ void ProgramBuilder::addRuleImpl(const PrgRule& r, const PrgRule::RData& rd) {
 		for (VarVec::const_iterator it = r.heads.begin(), end = r.heads.end(); it != end; ++it) {
 			if (b.first->value() != value_false) {
 				PrgAtomNode* a = resize(*it);
-				check_precondition(*it >= startAtom() || a->frozen() || inCompute(negLit(*it)), RedefinitionError);
+				//check_precondition(*it >= startAtom() || a->frozen() || inCompute(negLit(*it)), RedefinitionError);
 				if (r.body.empty()) a->setIgnore(true);
 				if (a->frozen() && a->preds.empty()) {
 					unfreeze(*it);
@@ -1448,7 +1459,8 @@ bool ProgramBuilder::mergeEqAtoms(Var a, Var root) {
 /////////////////////////////////////////////////////////////////////////////////////////
 bool ProgramBuilder::addConstraints(Solver& s, CycleChecker& c) {
 	ClauseCreator gc(&s);
-	for (BodyList::const_iterator it = bodies_.begin(); it != bodies_.end(); ++it) {
+    uint32 startBody = incData_?incData_->startBody_:0;
+	for (BodyList::const_iterator it = bodies_.begin() + startBody; it != bodies_.end(); ++it) {
 		if ( !(*it)->toConstraint(s, gc, *this) ) { return false; }
 		c.visit(*it);
 	}
@@ -1457,7 +1469,8 @@ bool ProgramBuilder::addConstraints(Solver& s, CycleChecker& c) {
 	check_precondition(atomIndex_->curBegin() == atomIndex_->end() || start <= atomIndex_->curBegin()->first,
 		std::logic_error);
 	AtomIndex::const_iterator sym = atomIndex_->lower_bound(atomIndex_->curBegin(), start);
-	for (AtomList::const_iterator it = atoms_.begin()+start; it != atoms_.end(); ++it) {
+	for (AtomList::const_iterator it = atoms_.begin(); it != atoms_.end(); ++it) {
+        if (it < (atoms_.begin() + start) && !(*it)->unsafe) continue;
 		if ( !(*it)->toConstraint(s, gc, *this) ) { return false; }
 		c.visit(*it);
 		if (sym != atomIndex_->end() && uint32(it-atoms_.begin()) == sym->first) {
@@ -1596,4 +1609,9 @@ void ProgramBuilder::writeRule(PrgBodyNode* b, std::ostream& os) {
 		}
 	}
 }
+
+void ProgramBuilder::setUnsafe(Var v) {
+		assert (v >= startAtom() && v < atoms_.size());
+		atoms_[v]->setUnsafe();
+	}
 }

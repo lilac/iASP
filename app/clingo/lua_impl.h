@@ -14,7 +14,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with gringo.  If not, see <http://www.gnu.org/licenses/>.
-
+#pragma once
 #include <gringo/storage.h>
 #include <gringo/domain.h>
 #include "clingo/claspoutput.h"

@@ -269,7 +269,7 @@ bool Preprocessor::classifyProgram(uint32 startAtom, uint32& stopAtom) {
 	Var atomId, atomEqId; PrgAtomNode* atom;
 	VarVec::size_type index = 0;
 	follow_.clear();
-	updatePreviouslyDefinedAtoms(startAtom, true);
+	//updatePreviouslyDefinedAtoms(startAtom, true);
 	std::stable_sort(prg_->initialSupp_.begin(), prg_->initialSupp_.end(), LessBodySize(prg_->bodies_));
 	for (VarVec::size_type i = 0;;) {
 		while ( (bodyId = nextBodyId(index)) != varMax ) {
@@ -619,7 +619,7 @@ uint32 Preprocessor::addBodyVar(Var bodyId, PrgBodyNode* body) {
 			a = dualAtom != varMax ? prg_->atoms_[dualAtom] : 0;
 		}
 		if (a && a->preds.size() == 1) r = prg_->bodies_[a->preds[0]];
-		if (r && allowMerge(body, r, a->preds[0])) {
+		if (r && r != body && allowMerge(body, r, a->preds[0])) {
 			ok_ = mergeBodies(body, a->preds[0]);
 			return body->eqNode();
 		}

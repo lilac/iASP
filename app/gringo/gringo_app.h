@@ -15,7 +15,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with gringo.  If not, see <http://www.gnu.org/licenses/>.
-
+#pragma once
 #include "gringo/gringo_options.h"
 #include "gringo/main_app.h"
 #include <gringo/streams.h>

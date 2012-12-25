@@ -21,6 +21,7 @@
 #include <clasp/model_enumerators.h>
 #include <clasp/cb_enumerator.h>
 #include <clasp/smodels_constraints.h>
+#include <iostream>
 namespace Clasp {
 
 ApiOptions::ApiOptions()
@@ -205,6 +206,7 @@ void ClaspFacade::solve(Input& problem, ClaspConfig& config, Callback* c) {
 		reportSolution(*config.solver, *config.solve.enumerator(), true);
 	}
 	else if (!config.onlyPre) {
+		//api_->writeProgram(std::cout);
 		config_->solve.reduce.setProblemSize(computeProblemSize());
 		setState(state_solve, event_state_enter);
 		more_ = Clasp::solve(*config.solver, config.solve); 
@@ -222,14 +224,19 @@ void ClaspFacade::solveIncremental(Input& problem, ClaspConfig& config, Incremen
 		if (!read() || !preprocess()) {
 			result_ = result_unsat;
 			more_   = false;
-			reportSolution(*config.solver, *config.solve.enumerator(), true);
-			break;
+			continue;
+			/*reportSolution(*config.solver, *config.solve.enumerator(), true);
+			break;*/
 		}
 		else {
 			config_->solve.reduce.setProblemSize(computeProblemSize());
 			setState(state_solve, event_state_enter);
 			assume.clear();
-			problem.getAssumptions(assume);
+			if (api_.get()) {
+				api_->getAssumptions(assume);
+				std::cout << "Step: " << step_ << std::endl;
+				api_->writeProgram(std::cout);
+			}
 			more_    = Clasp::solve(*config.solver, assume, config.solve); 
 			if (result_ == result_unknown && !more_) {
 				// initial assumptions are unsat

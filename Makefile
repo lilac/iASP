@@ -1,4 +1,4 @@
-target=iclingo-app
+target=gcasp #iclingo-app
 cmake_options=-DWITH_LUA=shipped -DWITH_LUASQL=0
 
 all: release
@@ -7,7 +7,16 @@ debug:
 	mkdir -p build/debug
 	cd build/debug && \
 		cmake ../.. \
-		-DCMAKE_CXX_FLAGS="-W -Wall -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC" \
+		-DCMAKE_CXX_FLAGS="-W -Wall " \
+		-DCMAKE_BUILD_TYPE=debug \
+		${cmake_options} && \
+	$(MAKE) $(target) #-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC
+
+linux-debug:
+	mkdir -p linux-build/debug
+	cd linux-build/debug && \
+		cmake ../.. \
+		-DCMAKE_CXX_FLAGS="-W -Wall" \
 		-DCMAKE_BUILD_TYPE=debug \
 		${cmake_options} && \
 	$(MAKE) $(target)
@@ -15,6 +24,15 @@ debug:
 release:
 	mkdir -p build/release
 	cd build/release && \
+	cmake ../.. \
+		-DCMAKE_CXX_FLAGS=-Wall \
+		-DCMAKE_BUILD_TYPE=release \
+		${cmake_options} && \
+	$(MAKE) $(target)
+
+linux-release:
+	mkdir -p linux-build/release
+	cd linux-build/release && \
 	cmake ../.. \
 		-DCMAKE_CXX_FLAGS=-Wall \
 		-DCMAKE_BUILD_TYPE=release \
