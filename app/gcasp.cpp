@@ -149,7 +149,7 @@ GCInput::GCInput(std::istream &ifs): nNodes(0), k(0)
 {
 
     boost::regex node("(\\w+)\\((\\d+)\\)\\.");
-    boost::regex edge("(\\w+)\\((\\d+)\\,(\\d+)\\)\\.");
+    boost::regex edge("(\\w+)\\((\\d+)\\,\\s*(\\d+)\\)\\.");
     //typedef std::match_results<const char*> cmatch;
     char line[LINESIZE];
     boost::cmatch mn, me;

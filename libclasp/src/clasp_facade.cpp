@@ -234,8 +234,10 @@ void ClaspFacade::solveIncremental(Input& problem, ClaspConfig& config, Incremen
 			assume.clear();
 			if (api_.get()) {
 				api_->getAssumptions(assume);
+                /*
 				std::cout << "Step: " << step_ << std::endl;
 				api_->writeProgram(std::cout);
+                */
 			}
 			more_    = Clasp::solve(*config.solver, assume, config.solve); 
 			if (result_ == result_unknown && !more_) {
