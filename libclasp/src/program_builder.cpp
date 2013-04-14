@@ -161,6 +161,7 @@ PrgBodyNode::PrgBodyNode(uint32 id, const PrgRule& rule, const PrgRule::RData& r
 	if      (rule.type() == CHOICERULE)     { type_ = CHOICE_BODY; }
 	else if (rule.type() == CONSTRAINTRULE) { type_ = COUNT_BODY; }
 	else if (rule.type() == WEIGHTRULE)     { type_ = SUM_BODY; }
+	isVolatile_ = rule.isVolatile_;
 	bool w = false;
 	if (extended()) { 
 		extra_.ext = Extended::createExt(this, rule.bound(), w = (rule.type() == WEIGHTRULE));
@@ -332,7 +333,11 @@ bool PrgBodyNode::toConstraint(Solver& s, ClauseCreator& c, const ProgramBuilder
 	if (value() != value_free && !s.force(trueLit(), 0))  { return false; }
 	if (!hasVar() || ignore())                            { return true; } // body is not relevant
 	const AtomList& atoms = prg.atoms_;
-	if (!extended()) { return addPredecessorClauses(s, c, atoms); }
+	if (!extended()) {
+		c.start().add(literal());
+		if (isVolatile_) c.add(negLit(prg.getLevelVar()));
+		return addPredecessorClauses(s, c, atoms);
+	}
 	WeightLitVec lits;
 	for (uint32 i = 0, end = size_; i != end; ++i) {
 		assert(goals_[i].var() != 0);
@@ -351,7 +356,6 @@ bool PrgBodyNode::toConstraint(Solver& s, ClauseCreator& c, const ProgramBuilder
 bool PrgBodyNode::addPredecessorClauses(Solver& s, ClauseCreator& gc, const AtomList& prgAtoms) {
 	const Literal negBody = ~literal();
 	ClauseCreator bc(&s);
-	gc.start().add(literal());
 	bool sat = false;
 	for (Literal* it = goals_, *end = goals_+size_; it != end; ++it) {
 		assert(it->var() != 0);
@@ -1132,7 +1136,7 @@ void ProgramBuilder::addRuleImpl(const PrgRule& r, const PrgRule::RData& rd) {
 		}
 		for (VarVec::const_iterator it = r.heads.begin(), end = r.heads.end(); it != end; ++it) {
 			if (b.first->value() != value_false) {
-				PrgAtomNode* a = resize(*it);
+				PrgAtomNode* a = resize(*it);  // TODO: Maybe more appropriate to set atoms unsafe here.
 				//check_precondition(*it >= startAtom() || a->frozen() || inCompute(negLit(*it)), RedefinitionError);
 				if (r.body.empty()) a->setIgnore(true);
 				if (a->frozen() && a->preds.empty()) {

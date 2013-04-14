@@ -131,6 +131,7 @@ public:
 		std::swap(body, o.body);
 		std::swap(bound_, o.bound_);
 		std::swap(type_, o.type_);
+		std::swap(isVolatile_, o.isVolatile_);
 	}
 
 	// logic
@@ -175,6 +176,7 @@ public:
 	
 	VarVec        heads;        /**< list of rule heads (note: conjunctive heads!) */
 	WeightLitVec  body;         /**< body of this rule */
+	bool	 	  isVolatile_;  /**< whether this rule is volatile in iv-ASP. */
 private:
 	PrgRule(const PrgRule&);
 	PrgRule& operator=(const PrgRule&);
