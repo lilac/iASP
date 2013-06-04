@@ -78,7 +78,8 @@ bool PrgAtomNode::toConstraint(Solver& s, ClauseCreator& gc, ProgramBuilder& prg
 	gc.start().add(~a);
 	prg.vars_.mark( ~a );
     if (this->unsafe) {
-        gc.add(negLit(prg.getLevelVar()));
+    	PrgAtomNode *a = prg.atoms_[prg.getLevelVar()];
+        gc.add(~(a->literal()));
     }
     bool sat = false;
 	bool nant= !negDep.empty();
@@ -161,7 +162,6 @@ PrgBodyNode::PrgBodyNode(uint32 id, const PrgRule& rule, const PrgRule::RData& r
 	if      (rule.type() == CHOICERULE)     { type_ = CHOICE_BODY; }
 	else if (rule.type() == CONSTRAINTRULE) { type_ = COUNT_BODY; }
 	else if (rule.type() == WEIGHTRULE)     { type_ = SUM_BODY; }
-	isVolatile_ = rule.isVolatile_;
 	bool w = false;
 	if (extended()) { 
 		extra_.ext = Extended::createExt(this, rule.bound(), w = (rule.type() == WEIGHTRULE));
@@ -335,7 +335,6 @@ bool PrgBodyNode::toConstraint(Solver& s, ClauseCreator& c, const ProgramBuilder
 	const AtomList& atoms = prg.atoms_;
 	if (!extended()) {
 		c.start().add(literal());
-		if (isVolatile_) c.add(negLit(prg.getLevelVar()));
 		return addPredecessorClauses(s, c, atoms);
 	}
 	WeightLitVec lits;
@@ -899,11 +898,7 @@ bool ProgramBuilder::endProgram(Solver& solver, bool finalizeSolver, bool backpr
 		if (erMode_ == mode_transform_integ || erMode_ == mode_transform_dynamic) {
 			transformIntegrity(std::min(uint32(15000), uint32(numAtoms())<<1));
 		}
-		// Note: add level var.
-		if (incData_) {
-            if (incData_->levelVar_ != 0) incData_->prevLevels_.push_back(incData_->levelVar_);
-			incData_->levelVar_ = vars_.add(Var_t::atom_var);
-		}
+
 		vars_.addTo(solver, incData_ ? incData_->startVar_ : 1);
 		atomIndex_->endInit();
 		bodyIndex_.clear();
@@ -1109,10 +1104,7 @@ Literal ProgramBuilder::getLiteral(Var atomId) const {
 void ProgramBuilder::getAssumptions(LitVec& out) const {
 	check_precondition(frozen_, std::logic_error);
 	if (incData_) {
-		for (VarVec::const_iterator it = incData_->prevLevels_.begin(), end = incData_->prevLevels_.end(); it != end; ++it) {
-			out.push_back( negLit(*it) );
-		}
-		out.push_back( posLit(incData_->levelVar_));
+		out.push_back( atoms_[incData_->levelVar_]->literal());
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////

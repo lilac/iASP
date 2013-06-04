@@ -389,10 +389,9 @@ public:
 	 * \note the bound-parameter is only interpreted if the rule to be created is
 	 * either a constraint- or a weight-rule.
 	 */
-	ProgramBuilder& startRule(RuleType t = BASICRULE, weight_t bound = -1, bool isVolatile_=false) {
+	ProgramBuilder& startRule(RuleType t = BASICRULE, weight_t bound = -1) {
 		rule_.clear();
 		rule_.setType(t);
-		rule_.isVolatile_ = isVolatile_;
 		if ((t == CONSTRAINTRULE || t == WEIGHTRULE) && bound > 0) {
 			rule_.setBound(bound);
 		}
@@ -943,7 +942,6 @@ private:
 		Extended* ext;          // only used for extended rules
 	} extra_;
 	Literal   goals_[0];      // B+: [0, posSize_), B-: [posSize_, size_)
-	bool      isVolatile_;  // from rule.
 };
 
 //! An atom-node in a body-atom-dependency graph
