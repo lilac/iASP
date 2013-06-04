@@ -500,7 +500,7 @@ void GCAspApp::printResult(ReasonEnd end)
 		if (!complete)
 		{
 			char buf[64];
-			int wr    = sprintf(buf, "%"PRIu64, models);
+			int wr    = sprintf(buf, "%" PRIu64, models);
 			buf[wr]   = '+';
 			buf[wr+1] = 0;
 			cout << setw(6) << buf << "\n";

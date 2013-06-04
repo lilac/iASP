@@ -61,7 +61,7 @@ void OutputFormat::printOptimize(const MinimizeConstraint& min) {
 }
 void OutputFormat::printOptimizeValues(const MinimizeConstraint& m) {
 	for (uint32 i = 0; i < m.numRules(); ++i) {
-		printf("%"PRId64" ", m.getOptimum(i));
+		printf("%" PRId64" ", m.getOptimum(i));
 	}
 }
 void OutputFormat::printSolution(const Solver& s, const Enumerator& en, bool complete) {
@@ -81,9 +81,9 @@ void OutputFormat::printJumpStats(const SolverStatistics& stats) {
 		const JumpStats& js = *st.jumps;
 		int w = 20 - (int)strlen(format[comment]);
 		const char* c = format[comment];
-		printf("%s\n%-*s: %-10"PRIu64"\n", c, w, "Backtracks",st.conflicts-js.jumps);
-		printf("%s%-*s: %-10"PRIu64" (Bounded: %"PRIu64")\n", c, w, "Backjumps", js.jumps, js.bJumps);
-		printf("%s%-*s: %-10"PRIu64" (Skipped: %"PRIu64" Rate: %5.1f%%)\n", c, w, "Skippable Levels",js.jumpSum, js.jumpSum - js.boundSum, percent(js.jumpSum - js.boundSum, js.jumpSum));
+		printf("%s\n%-*s: %-10" PRIu64"\n", c, w, "Backtracks",st.conflicts-js.jumps);
+		printf("%s%-*s: %-10" PRIu64" (Bounded: %" PRIu64")\n", c, w, "Backjumps", js.jumps, js.bJumps);
+		printf("%s%-*s: %-10" PRIu64" (Skipped: %" PRIu64" Rate: %5.1f%%)\n", c, w, "Skippable Levels",js.jumpSum, js.jumpSum - js.boundSum, percent(js.jumpSum - js.boundSum, js.jumpSum));
 		printf("%s%-*s: %-10u (Executed: %u)\n", c, w, "Max Jump Length",js.maxJump, js.maxJumpEx);
 		printf("%s%-*s: %-10u\n", c, w, "Max Bound Length",js.maxBound);
 		printf("%s%-*s: %-10.1f (Executed: %.1f)\n", c, w, "Average Jump Length",js.avgJumpLen(), js.avgJumpLenEx());
@@ -93,30 +93,30 @@ void OutputFormat::printJumpStats(const SolverStatistics& stats) {
 		uint64 anteAll    = std::accumulate(js.anteUsed, js.anteUsed+Constraint_t::num_types, uint64(0));
 		uint64 anteNative = js.anteUsed[Constraint_t::static_constraint] + js.anteUsed[Constraint_t::short_constraint];
 		uint64 anteLearnt = anteAll - anteNative;
-		printf("%s%-*s: %-10"PRIu64" (Avg : %5.1f     Rate: %5.1f%%)\n", c, w, "Static Antecedents", anteNative, average(anteNative, stats.solve.conflicts), percent(anteNative, anteAll));
-		printf("%s%-*s: %-10"PRIu64" (Rate: %5.1f%% Overall: %5.1f%%)\n", c, w, "  Short", js.anteUsed[Constraint_t::short_constraint]
+		printf("%s%-*s: %-10" PRIu64" (Avg : %5.1f     Rate: %5.1f%%)\n", c, w, "Static Antecedents", anteNative, average(anteNative, stats.solve.conflicts), percent(anteNative, anteAll));
+		printf("%s%-*s: %-10" PRIu64" (Rate: %5.1f%% Overall: %5.1f%%)\n", c, w, "  Short", js.anteUsed[Constraint_t::short_constraint]
 			, percent(js.anteUsed[Constraint_t::short_constraint], anteNative)
 			, percent(js.anteUsed[Constraint_t::short_constraint], anteAll));
-		printf("%s%-*s: %-10"PRIu64" (Rate: %5.1f%% Overall: %5.1f%%)\n", c, w, "  Other", js.anteUsed[Constraint_t::static_constraint]
+		printf("%s%-*s: %-10" PRIu64" (Rate: %5.1f%% Overall: %5.1f%%)\n", c, w, "  Other", js.anteUsed[Constraint_t::static_constraint]
 			, percent(js.anteUsed[Constraint_t::static_constraint], anteNative)
 			, percent(js.anteUsed[Constraint_t::static_constraint], anteAll));
 
 		double p = double(js.anteUsed[Constraint_t::learnt_conflict]+js.anteUsed[Constraint_t::learnt_loop]);
 		p       /= std::max(1.0, double(stats.solve.learnts[0]+stats.solve.learnts[1]));
-		printf("%s%-*s: %-10"PRIu64" (Avg : %5.1f     Rate: %5.1f%% Plocal: %5.1f)\n", c, w, "Learnt Antecedents"
+		printf("%s%-*s: %-10" PRIu64" (Avg : %5.1f     Rate: %5.1f%% Plocal: %5.1f)\n", c, w, "Learnt Antecedents"
 			, anteLearnt, average(anteLearnt, stats.solve.conflicts), percent(anteLearnt, anteAll), p);
 		p        = double(js.anteUsed[Constraint_t::learnt_conflict]) / std::max(1.0, double(stats.solve.learnts[0]));
-		printf("%s%-*s: %-10"PRIu64" (Rate: %5.1f%% Overall: %5.1f%% P: %5.1f)\n", c, w, "  Conflict", js.anteUsed[Constraint_t::learnt_conflict]
+		printf("%s%-*s: %-10" PRIu64" (Rate: %5.1f%% Overall: %5.1f%% P: %5.1f)\n", c, w, "  Conflict", js.anteUsed[Constraint_t::learnt_conflict]
 			, percent(js.anteUsed[Constraint_t::learnt_conflict], anteLearnt)
 			, percent(js.anteUsed[Constraint_t::learnt_conflict], anteAll)
 			, p);
 		p        = double(js.anteUsed[Constraint_t::learnt_loop]) / std::max(1.0, double(stats.solve.learnts[1]));
-		printf("%s%-*s: %-10"PRIu64" (Rate: %5.1f%% Overall: %5.1f%% P: %5.1f)\n", c, w, "  Loop", js.anteUsed[Constraint_t::learnt_loop]
+		printf("%s%-*s: %-10" PRIu64" (Rate: %5.1f%% Overall: %5.1f%% P: %5.1f)\n", c, w, "  Loop", js.anteUsed[Constraint_t::learnt_loop]
 			, percent(js.anteUsed[Constraint_t::learnt_loop], anteLearnt)
 			, percent(js.anteUsed[Constraint_t::learnt_loop], anteAll)
 			, p);
 		p        = double(js.anteUsed[Constraint_t::learnt_other]) / std::max(1.0, double(stats.solve.learnts[2]));
-		printf("%s%-*s: %-10"PRIu64" (Rate: %5.1f%% Overall: %5.1f%% P: %5.1f)\n", c, w, "  Other", js.anteUsed[Constraint_t::learnt_other]
+		printf("%s%-*s: %-10" PRIu64" (Rate: %5.1f%% Overall: %5.1f%% P: %5.1f)\n", c, w, "  Other", js.anteUsed[Constraint_t::learnt_other]
 			, percent(js.anteUsed[Constraint_t::learnt_other], anteLearnt)
 			, percent(js.anteUsed[Constraint_t::learnt_other], anteAll)
 			, p);
@@ -155,9 +155,9 @@ void AspOutput::printStats(const SolverStatistics& stats, const Enumerator&) {
 		const SolveStats& st   = stats.solve;
 		const ProblemStats& ps = stats.problem;
 		const PreproStats& lp  = stats_;
-		printf("%-12s: %"PRIu64"\n", "Choices",st.choices);
-		printf("%-12s: %"PRIu64"\n", "Conflicts",st.conflicts);
-		printf("%-12s: %"PRIu64"\n", "Restarts",st.restarts);
+		printf("%-12s: %" PRIu64"\n", "Choices",st.choices);
+		printf("%-12s: %" PRIu64"\n", "Conflicts",st.conflicts);
+		printf("%-12s: %" PRIu64"\n", "Restarts",st.restarts);
 		printf("\n%-12s: %-6u", "Atoms", lp.atoms);
 		if (lp.trStats) {
 			printf(" (Original: %u Auxiliary: %u)", lp.atoms-lp.trStats->auxAtoms, lp.trStats->auxAtoms);
@@ -195,15 +195,15 @@ void AspOutput::printStats(const SolverStatistics& stats, const Enumerator&) {
 			, percent(other, ps.constraints[0]));
 
 		uint64 learntSum = std::accumulate(st.learnts, st.learnts+Constraint_t::max_learnt_type, uint64(0));
-		printf("%-12s: %-6"PRIu64" (Binary:%5.1f%% Ternary:%5.1f%% Other:%5.1f%%)\n", "Lemmas"
+		printf("%-12s: %-6" PRIu64" (Binary:%5.1f%% Ternary:%5.1f%% Other:%5.1f%%)\n", "Lemmas"
 			, learntSum
 			, percent(st.binary, learntSum)
 			, percent(st.ternary, learntSum)
 			, percent(learntSum-st.binary-st.ternary, learntSum));
-		printf("%-12s: %-6"PRIu64" (Average Length: %.1f) \n", "  Conflicts", st.learnts[0], average(st.lits[0], st.learnts[0]));
-		printf("%-12s: %-6"PRIu64" (Average Length: %.1f) \n", "  Loops",     st.learnts[1], average(st.lits[1], st.learnts[1]));
-		printf("%-12s: %-6"PRIu64" (Average Length: %.1f) \n", "  Other",     st.learnts[2], average(st.lits[2], st.learnts[2]));
-		printf("%-12s: %-6"PRIu64"\n", "  Deleted",     st.deleted);
+		printf("%-12s: %-6" PRIu64" (Average Length: %.1f) \n", "  Conflicts", st.learnts[0], average(st.lits[0], st.learnts[0]));
+		printf("%-12s: %-6" PRIu64" (Average Length: %.1f) \n", "  Loops",     st.learnts[1], average(st.lits[1], st.learnts[1]));
+		printf("%-12s: %-6" PRIu64" (Average Length: %.1f) \n", "  Other",     st.learnts[2], average(st.lits[2], st.learnts[2]));
+		printf("%-12s: %-6" PRIu64"\n", "  Deleted",     st.deleted);
 		OutputFormat::printJumpStats(stats);
 		fflush(stdout);
 	}
@@ -234,17 +234,17 @@ void SatOutput::printModel(const Solver& s, const Enumerator&) {
 void SatOutput::printStats(const SolverStatistics& stats, const Enumerator&) {
 	const SolveStats& st   = stats.solve;
 	const ProblemStats& ps = stats.problem;
-	printf("c %-10s: %"PRIu64"\n", "Choices",st.choices);
-	printf("c %-10s: %"PRIu64"\n", "Conflicts",st.conflicts);
-	printf("c %-10s: %"PRIu64"\n", "Restarts",st.restarts);	
+	printf("c %-10s: %" PRIu64"\n", "Choices",st.choices);
+	printf("c %-10s: %" PRIu64"\n", "Conflicts",st.conflicts);
+	printf("c %-10s: %" PRIu64"\n", "Restarts",st.restarts);
 	printf("c %-10s: %-6u (Eliminated: %u)\n", "Variables",stats.problem.vars, stats.problem.eliminated);
 	printf("c %-10s: %u\n", "Clauses",ps.constraints[0]);
 	printf("c %-10s: %u\n", "  Binary",ps.constraints[1]);
 	printf("c %-10s: %u\n", "  Ternary",ps.constraints[2]);
-	printf("c %-10s: %"PRIu64"\n", "Lemmas",st.learnts[0]);
-	printf("c %-10s: %"PRIu64"\n", "  Binary",st.binary);
-	printf("c %-10s: %"PRIu64"\n", "  Ternary",st.ternary);
-	printf("c %-10s: %"PRIu64"\n", "  Deleted",st.deleted);
+	printf("c %-10s: %" PRIu64"\n", "Lemmas",st.learnts[0]);
+	printf("c %-10s: %" PRIu64"\n", "  Binary",st.binary);
+	printf("c %-10s: %" PRIu64"\n", "  Ternary",st.ternary);
+	printf("c %-10s: %" PRIu64"\n", "  Deleted",st.deleted);
 	OutputFormat::printJumpStats(stats);
 	fflush(stdout);
 }
