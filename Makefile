@@ -1,4 +1,4 @@
-target=gcasp #iclingo-app
+target=bwasp #iclingo-app
 cmake_options=-DWITH_LUA=shipped -DWITH_LUASQL=0
 
 all: release
@@ -22,11 +22,12 @@ linux-debug:
 	$(MAKE) $(target)
 
 release:
-	mkdir -p build/release
+	mkdir -p build/release # -std=c++11 -stdlib=libc++ -I/usr/lib/c++/v1/" 
 	cd build/release && \
 	cmake ../.. \
-		-DCMAKE_CXX_FLAGS=-Wall \
+		-DCMAKE_CXX_FLAGS="-Wall" \
 		-DCMAKE_BUILD_TYPE=release \
+		-DCMAKE_CXX_COMPILER=g++-mp-4.8 \
 		${cmake_options} && \
 	$(MAKE) $(target)
 
