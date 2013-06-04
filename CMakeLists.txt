@@ -75,6 +75,8 @@ elseif(WITH_LUA STREQUAL "shipped")
 		add_subdirectory(libluasql)
 	endif()
 endif()
+
+add_definitions("-std=c++11")
 add_subdirectory(libclasp)
 add_subdirectory(libgringo)
 add_subdirectory(libprogram_opts)
