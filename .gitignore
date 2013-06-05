@@ -1,6 +1,7 @@
 build
 linux-build
-benchmark
+benchmark/*log
 tags
 doc
 *.swp
+*~
