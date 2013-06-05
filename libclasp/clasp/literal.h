@@ -27,6 +27,7 @@
 #include <clasp/pod_vector.h>
 #include <algorithm>  // std::swap
 #include <limits>
+#include <string>
 /*!
  * \file 
  * Contains the definition of the class Literal.
