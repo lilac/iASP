@@ -66,3 +66,4 @@
 #define PARSER_MINIMIZE                       66
 #define PARSER_MAXIMIZE                       67
 #define PARSER_COMPUTE                        68
+#define PARSER_INCR                           69

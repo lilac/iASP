@@ -198,6 +198,7 @@ start:
 		"#show"          { return PARSER_SHOW; }
 		"#hide"          { return PARSER_HIDE; }
 		"#const"         { return PARSER_CONST; }
+		"#incr"          { return PARSER_INCR; }
 		"#minimi"[zs]"e" { return PARSER_MINIMIZE; }
 		"#maximi"[zs]"e" { return PARSER_MAXIMIZE; }
 		"#compute"       { return PARSER_COMPUTE; }
