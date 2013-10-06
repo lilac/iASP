@@ -31,6 +31,7 @@ public:
 	virtual void print(Storage *sto, std::ostream &out) const = 0;
 	virtual bool edbFact() const { return false; }
 	virtual bool choice() const { return false; }
+	bool dynamic() const;
 	virtual ~Statement() { }
 };
 

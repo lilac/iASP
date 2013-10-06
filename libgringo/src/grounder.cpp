@@ -91,6 +91,7 @@ Grounder::Grounder(Output *output, bool debug, TermExpansionPtr exp)
 	, initialized_(false)
 	, luaImpl_(new LuaImpl(this))
 	, termExpansion_(exp)
+	, level_(0)
 {
 }
 
@@ -177,6 +178,7 @@ void Grounder::analyze(const std::string &depGraph, bool stats)
 
 void Grounder::ground()
 {
+	level_++;
 	foreach(Statement &statement, statements_) { statement.enqueued(true); }
 	foreach(DomainMap::reference dom, const_cast<DomainMap&>(domains()))
 		dom.second->complete(false);

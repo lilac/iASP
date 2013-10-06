@@ -21,6 +21,28 @@
 #include <gringo/varterm.h>
 #include <gringo/grounder.h>
 #include <gringo/exceptions.h>
+#include <gringo/lit.h>
+
+namespace
+{
+
+class IncVarFinder : public PrgVisitor
+{
+public:
+	IncVarFinder() : found_(false) { }
+	bool find(Statement *s) { s->visit(this); return found_; }
+
+private:
+	void visit(VarTerm *var, bool bind)      { (void)bind; (void)var; }
+	void visit(Term* term, bool bind)        { if(!found_) term->visit(this, bind); }
+	void visit(Lit *lit, bool domain)        { (void)domain; if(!found_) lit->visit(this); }
+	void visit(Groundable *grd, bool choice) { (void)choice; if(!found_) grd->visit(this); }
+	void visit(IncrTerm *t)                  { found_ = true; }
+
+private:
+	bool     found_;
+};
+}
 
 Statement::Statement(const Loc &loc)
 	: Locateable(loc)
@@ -53,3 +75,8 @@ void Statement::check(Grounder *g)
 	}
 }
 
+bool Statement::dynamic() const
+{
+	IncVarFinder f;
+	return f.find(const_cast<Statement*>(this));
+}

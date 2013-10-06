@@ -47,7 +47,11 @@ void RulePrinter::end()
 
 void RulePrinter::print(PredLitRep *l)
 {
-	if(printHead_)
+	if (l == NULL)
+	{ // If l == NULL, add the incremental atom.
+		pos_.push_back(output_->getIncAtom());
+	}
+	else if(printHead_)
 	{
 		assert(!l->sign());
 		assert(head_.size() == 0);

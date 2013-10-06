@@ -82,7 +82,7 @@ public:
 	void endComponent(bool positive);
 	void externalStm(uint32_t nameId, uint32_t arity);
 	uint32_t createVar();
-	
+	uint32_t level() const { return level_; }
 	const TermExpansion &termExpansion() const;
 	~Grounder();
 
@@ -100,7 +100,7 @@ private:
 	std::auto_ptr<LuaImpl> luaImpl_;
 	Stats                  stats_;
 	TermExpansionPtr       termExpansion_;
-
+	uint32_t               level_;
 };
 
 inline const TermExpansion &Grounder::termExpansion() const { return *termExpansion_; }

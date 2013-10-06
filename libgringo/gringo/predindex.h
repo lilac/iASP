@@ -31,7 +31,9 @@ private:
 		const ValVec *vals;
 		uint32_t size;
 	};
+	// A map from the index of (indexVec_ : ValVec) to the index of (sets_ : BindSets).
 	typedef boost::unordered_map<uint32_t, uint32_t, ValCmp, ValCmp> IndexMap;
+	// A vector storing the index of (bindVec_ : ValVec).
 	typedef std::vector<uint32_t> BindSet;
 	typedef std::vector<BindSet> BindSets;
 public:

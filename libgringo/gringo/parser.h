@@ -80,6 +80,8 @@ public:
 	Grounder *grounder() { return g_; }
 	PredLit *predLit(const Loc &loc, uint32_t id, TermPtrVec &terms, bool sign);
 	void constTerm(uint32_t index, Term *term);
+	void incr(uint32_t index);
+	Term *varTerm(const Loc &loc, uint32_t index);
 	void domainStm(const Loc &loc, uint32_t id, const VarSigVec &vars);
 	DomStmRng domainStm(uint32_t var);
 	~Parser();
@@ -118,5 +120,7 @@ private:
 	// Lua
 	Loc          luaBegin_;
 	bool         compat_;
+	// parsing incr directives
+	uint32_t     incr_;
 };
 

@@ -18,8 +18,8 @@
 #pragma once
 
 #include <gringo/gringo.h>
-#include <gringo/prgvisitor.h>
 
+class IncrTerm;
 class PrgVisitor
 {
 public:
@@ -28,5 +28,7 @@ public:
 	virtual void visit(PredLit *pred) { (void)pred; }
 	virtual void visit(Lit *lit, bool domain) { (void)lit; (void)domain; }
 	virtual void visit(Groundable *grd, bool choice) { (void)grd; (void)choice; }
+	virtual void visit(IncrTerm *i) { (void)i; }
+	virtual ~PrgVisitor() {}
 };
 

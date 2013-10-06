@@ -18,13 +18,13 @@
 #include <gringo/parser.h>
 #include <gringo/varterm.h>
 #include <gringo/inclit.h>
-#include <gringo/varterm.h>
 #include <gringo/constterm.h>
 #include <gringo/prgvisitor.h>
 #include <gringo/predlit.h>
 #include <gringo/rule.h>
 #include <gringo/streams.h>
 #include <gringo/grounder.h>
+#include <gringo/incrterm.h>
 #include <gringo/statement.h>
 #include <gringo/exceptions.h>
 #include "parser_impl.h"
@@ -53,6 +53,7 @@ Parser::Parser(Grounder *g, IncConfig &config, Streams &streams, bool compat)
 	, iVar_(0)
 	, iAdded_(0)
 	, compat_(compat)
+	, incr_(0)
 {
 }
 
@@ -84,6 +85,7 @@ start:
 		"#show"          { return PARSER_SHOW; }
 		"#hide"          { return PARSER_HIDE; }
 		"#const"         { return PARSER_CONST; }
+		"#incr"          { return PARSER_INCR; }
 		"#minimi"[zs]"e" { return PARSER_MINIMIZE; }
 		"#maximi"[zs]"e" { return PARSER_MAXIMIZE; }
 		"#compute"       { return PARSER_COMPUTE; }
@@ -400,6 +402,25 @@ Term *Parser::term(Val::Type t, const Loc &loc, uint32_t index)
 		assert(t == Val::STRING);
 		return new ConstTerm(loc, Val::create(Val::STRING, index));
 	}
+}
+
+void Parser::incr(uint32_t index)
+{
+    incr_ = index;
+}
+
+Term *Parser::varTerm(const Loc &loc, uint32_t index)
+{
+    Term *res;
+    if(index == incr_)
+    {
+        res = new IncrTerm(loc);
+    }
+    else
+    {
+        res = new VarTerm(loc, index);
+    }
+    return res;
 }
 
 namespace

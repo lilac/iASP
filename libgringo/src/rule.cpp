@@ -151,7 +151,7 @@ bool Rule::grounded(Grounder *g)
 	if(head_.get())
 	{
 		head_->grounded(g);
-		if(head_->fact()) return true;
+		if(head_->fact()) return true; // the head is already a fact, so ignore this rule.
 	}
 	Printer *printer = g->output()->printer<Printer>();
 	printer->begin();
@@ -168,6 +168,8 @@ bool Rule::grounded(Grounder *g)
 		}
 		else if(lit.forcePrint()) { lit.accept(printer); }
 	}
+	// If this rule is not static, add an incremental atom.
+	if (dynamic()) printer->print(NULL);
 	if(head_.get()) head_->addDomain(g, fact);
 	printer->end();
 	return true;

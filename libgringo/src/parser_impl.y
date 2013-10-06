@@ -207,6 +207,7 @@ line ::= HIDE(tok) predicate(pred) cond(list).         { pParser->add(new Displa
 line ::= SHOW signed(id) SLASH NUMBER(num).            { OUT->show(id.index, num.number, true); }
 line ::= SHOW(tok) predicate(pred) cond(list).         { pParser->add(new Display(tok.loc(), true, pred, *list)); delete list; }
 line ::= CONST IDENTIFIER(id) ASSIGN term(term).       { pParser->constTerm(id.index, term); }
+line ::= INCR VARIABLE(var).                           { pParser->incr(var.index); }
 line ::= DOMAIN signed(id) LBRAC var_list(vars) RBRAC. { pParser->domainStm(id.loc(), id.index, *vars); del(vars); }
 line ::= EXTERNAL(tok) predicate(pred) cond(list).     { pParser->add(new External(tok.loc(), pred, *list)); delete list; }
 line ::= EXTERNAL signed(id) SLASH NUMBER(num).        { GRD->externalStm(id.index, num.number); }
@@ -263,7 +264,7 @@ cmp(res) ::= LTHAN.   { res = RelLit::LTHAN; }
 cmp(res) ::= EQUAL.   { res = RelLit::EQUAL; }
 cmp(res) ::= INEQUAL. { res = RelLit::INEQUAL; }
 
-term(res) ::= VARIABLE(var).  { res = new VarTerm(var.loc(), var.index); }
+term(res) ::= VARIABLE(var).  { res = pParser->varTerm(var.loc(), var.index); }
 term(res) ::= IDENTIFIER(id). { res = pParser->term(Val::ID, id.loc(), id.index); }
 term(res) ::= STRING(id).     { res = pParser->term(Val::STRING, id.loc(), id.index); }
 term(res) ::= NUMBER(num).    { res = new ConstTerm(num.loc(), Val::create(Val::NUM, num.number)); }

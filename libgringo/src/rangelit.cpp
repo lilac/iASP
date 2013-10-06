@@ -116,9 +116,9 @@ namespace
 		if(current_ <= upper_)
 		{
 			grounder->val(var_, Val::create(Val::NUM, current_++), binder);
-			return std::make_pair(true, !finished_);
+			return std::make_pair(true, current_ <= upper_);
 		}
-		else return std::make_pair(false, !finished_);
+		else return std::make_pair(false, current_ <= upper_);
 	}
 }
 

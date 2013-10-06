@@ -60,7 +60,7 @@ void Instantiator::ground(Grounder *g)
 		assert(ord[l] || !matched.second);
 		if(!matched.second)
 			ord[l] = false;
-		if(matched.first && numNew > 0)
+		if(matched.first/* && numNew > 0*/)
 		{
 			if(l + 1 == static_cast<int>(indices_.size()))
 			{
