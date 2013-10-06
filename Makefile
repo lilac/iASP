@@ -1,4 +1,4 @@
-target=bwasp #iclingo-app
+target=iclingo-app
 cmake_options=-DWITH_LUA=shipped -DWITH_LUASQL=0
 
 all: release

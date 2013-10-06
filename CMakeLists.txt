@@ -76,7 +76,7 @@ elseif(WITH_LUA STREQUAL "shipped")
 	endif()
 endif()
 
-add_definitions("-std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 add_subdirectory(libclasp)
 add_subdirectory(libgringo)
 add_subdirectory(libprogram_opts)
