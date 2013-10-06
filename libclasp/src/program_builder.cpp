@@ -865,8 +865,8 @@ ProgramBuilder& ProgramBuilder::updateProgram() {
 	check_precondition(frozen_ || !incData_, std::logic_error);
 	check_precondition(!atoms_.empty() && "startProgram() not called!", std::logic_error);
 	// delete bodies and clean up atoms
-	//disposeProgram(false);
-	VarVec().swap(initialSupp_);
+	disposeProgram(false);
+	//VarVec().swap(initialSupp_);
 	if (!incData_)  { incData_ = new Incremental(); }
 	incData_->startVar_ = (uint32)vars_.size();
 	incData_->startAtom_= (uint32)atoms_.size();
@@ -887,7 +887,7 @@ bool ProgramBuilder::endProgram(Solver& solver, bool finalizeSolver, bool backpr
 		if (normalize_) { normalize(); }
 		stats.atoms = numAtoms() - (startAtom()-1);
 		stats.bodies= numBodies();
-		//updateFrozenAtoms(solver);
+		updateFrozenAtoms(solver);
 		frozen_ = true;
 		if (atoms_[0]->value() == value_true) { return false; }
 		Preprocessor p;
@@ -1104,7 +1104,9 @@ Literal ProgramBuilder::getLiteral(Var atomId) const {
 void ProgramBuilder::getAssumptions(LitVec& out) const {
 	check_precondition(frozen_, std::logic_error);
 	if (incData_) {
-		out.push_back( atoms_[incData_->levelVar_]->literal());
+	    for (VarVec::const_iterator it = incData_->freeze_.begin(), end = incData_->freeze_.end(); it != end; ++it) {
+	        out.push_back( ~getLiteral(*it) );
+	    }
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////

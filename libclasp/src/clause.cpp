@@ -272,7 +272,7 @@ void Clause::initWatches(Solver& s) {
 		initWatches(s, fw, sw);
 	}
 	else {
-		uint32 watch[2] = {0, size_-1};
+		uint32 watch[2] = {0, static_cast<uint32>(size_-1)};
 		uint32 count[2] = {s.numWatches(~(*this)[0]), s.numWatches(~(*this)[size_-1])};
 		uint32 maxCount = count[0] < count[1];
 		for (uint32 x = 1, end = size_-1; count[maxCount] > 0u && x != end; ++x) {
