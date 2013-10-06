@@ -27,7 +27,7 @@ release:
 	cmake ../.. \
 		-DCMAKE_CXX_FLAGS="-Wall" \
 		-DCMAKE_BUILD_TYPE=release \
-		-DCMAKE_CXX_COMPILER=g++-mp-4.8 \
+		-DCMAKE_CXX_COMPILER=c++ \
 		${cmake_options} && \
 	$(MAKE) $(target)
 
