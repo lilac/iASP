@@ -77,9 +77,8 @@ bool PrgAtomNode::toConstraint(Solver& s, ClauseCreator& gc, ProgramBuilder& prg
 	Literal a = literal();
 	gc.start().add(~a);
 	prg.vars_.mark( ~a );
-    if (this->unsafe) {
-    	PrgAtomNode *a = prg.atoms_[prg.getLevelVar()];
-        gc.add(~(a->literal()));
+    if (!this->safe) {
+        gc.add(~prg.getLiteral(prg.getLevelVar()));
     }
     bool sat = false;
 	bool nant= !negDep.empty();
@@ -409,7 +408,7 @@ bool PrgBodyNode::simplifyBody(ProgramBuilder& prg, uint32 bodyId, std::pair<uin
 		if (v == value_weak_true && goals_[i].sign()) {
 			v = value_true;
 		}
-		if (v != value_free && v != value_weak_true) {  // truth value is known
+		if (v != value_free && v != value_weak_true && prg.atoms_[a]->safe) {  // truth value is known
 			mark = false;                                 // subgoal will be removed
 			if (v == falseValue(goals_[i])) {
 				// drop rule if normal/choice
@@ -986,7 +985,11 @@ void ProgramBuilder::writeProgram(std::ostream& os) {
 	// write eq-atoms, symbol-table and compute statement
 	std::stringstream bp, bm, symTab;
 	Literal comp;
-	AtomIndex::const_iterator sym = atomIndex_->begin();
+	for (AtomIndex::const_iterator sym = atomIndex_->begin(); sym != atomIndex_->end(); sym++) {
+	    if (!sym->second.name.empty()) {
+	        symTab << sym->first << " " << sym->second.name << "\n";
+	    }
+	}
 	for (AtomList::size_type i = 1; i < atoms_.size(); ++i) {
 		// write the equivalent atoms
 		if (atoms_[i]->eq()) {
@@ -995,12 +998,6 @@ void ProgramBuilder::writeProgram(std::ostream& os) {
 		if ( atoms_[i]->value() != value_free ) {
 			std::stringstream& str = atoms_[i]->value() == value_false ? bm : bp;
 			str << i << "\n";
-		}
-		if (sym != atomIndex_->end() && Var(i) == sym->first) {
-			if (sym->second.lit != negLit(sentVar) && !sym->second.name.empty()) {
-				symTab << i << " " << sym->second.name << "\n";
-			}
-			++sym;
 		}
 	}
 	os << delimiter << "\n";
@@ -1013,9 +1010,9 @@ void ProgramBuilder::writeProgram(std::ostream& os) {
 // Program mutating functions
 /////////////////////////////////////////////////////////////////////////////////////////
 #define check_not_frozen() check_precondition(!frozen_ && "Can't update frozen program!", std::logic_error)
-Var ProgramBuilder::newAtom(bool unsafe) {
+Var ProgramBuilder::newAtom() {
 	check_not_frozen();
-	atoms_.push_back( new PrgAtomNode(unsafe) );
+	atoms_.push_back( new PrgAtomNode() );
 	return (Var) atoms_.size() - 1;
 }
 
@@ -1104,9 +1101,7 @@ Literal ProgramBuilder::getLiteral(Var atomId) const {
 void ProgramBuilder::getAssumptions(LitVec& out) const {
 	check_precondition(frozen_, std::logic_error);
 	if (incData_) {
-	    for (VarVec::const_iterator it = incData_->freeze_.begin(), end = incData_->freeze_.end(); it != end; ++it) {
-	        out.push_back( ~getLiteral(*it) );
-	    }
+		out.push_back(getLiteral(incData_->levelVar_));
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -1382,6 +1377,7 @@ void ProgramBuilder::normalize() {
 void ProgramBuilder::updateFrozenAtoms(const Solver& solver) {
 	if (incData_ != 0) {
 		// update truth values of atoms from previous iterations
+	    // TODO: this for loop can be deleted, but leave it here for further examination.
 		for (uint32 i = 1; i != incData_->startAtom_; ++i) {
 			ValueRep v;
 			if (atoms_[i]->hasVar() && (v = solver.value(atoms_[i]->var())) != value_free) {
@@ -1458,7 +1454,7 @@ bool ProgramBuilder::mergeEqAtoms(Var a, Var root) {
 bool ProgramBuilder::addConstraints(Solver& s, CycleChecker& c) {
 	ClauseCreator gc(&s);
     uint32 startBody = incData_?incData_->startBody_:0;
-	for (BodyList::const_iterator it = bodies_.begin() + startBody; it != bodies_.end(); ++it) {
+	for (BodyList::const_iterator it = bodies_.begin(); it != bodies_.end(); ++it) {
 		if ( !(*it)->toConstraint(s, gc, *this) ) { return false; }
 		c.visit(*it);
 	}
@@ -1468,7 +1464,7 @@ bool ProgramBuilder::addConstraints(Solver& s, CycleChecker& c) {
 		std::logic_error);
 	AtomIndex::const_iterator sym = atomIndex_->lower_bound(atomIndex_->curBegin(), start);
 	for (AtomList::const_iterator it = atoms_.begin(); it != atoms_.end(); ++it) {
-        if (it < (atoms_.begin() + start) && !(*it)->unsafe) continue;
+        if (it < (atoms_.begin() + start) && (*it)->safe) continue;
 		if ( !(*it)->toConstraint(s, gc, *this) ) { return false; }
 		c.visit(*it);
 		if (sym != atomIndex_->end() && uint32(it-atoms_.begin()) == sym->first) {
@@ -1608,8 +1604,8 @@ void ProgramBuilder::writeRule(PrgBodyNode* b, std::ostream& os) {
 	}
 }
 
-void ProgramBuilder::setUnsafe(Var v) {
+void ProgramBuilder::setSafe(Var v, bool val) {
 		assert (v >= startAtom() && v < atoms_.size());
-		atoms_[v]->setUnsafe();
-	}
+		atoms_[v]->setSafe(val);
+}
 }

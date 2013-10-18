@@ -94,6 +94,8 @@ start:
 		"#volatile"      { return PARSER_VOLATILE; }
 		"#domain"        { return PARSER_DOMAIN; }
 		"#external"      { return PARSER_EXTERNAL; }
+		"#static"        { return PARSER_STATIC; }
+		"#dynamic"       { return PARSER_DYNAMIC; }
 		"#infimum"       { return PARSER_INFIMUM; }
 		"#supremum"      { return PARSER_SUPREMUM; }
 		IDENTIFIER       { token_.index  = g_->index(string()); return PARSER_IDENTIFIER; }

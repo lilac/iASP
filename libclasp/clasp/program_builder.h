@@ -302,10 +302,9 @@ public:
 
 	//! Adds a new atom to the program.
 	/*!
-     * \param unsafe true if this atom can be supported by upper level rules in iASP.
 	 * \return The new atom's id.
 	 */
-	Var newAtom(bool unsafe = false);
+	Var newAtom();
 
 	//! Sets the name of the given atom and adds it to the program's symbol table.
 	/*!
@@ -436,13 +435,17 @@ public:
 		return addRule(rule_);
 	}
 
-    ProgramBuilder& setLevelVar(Var v) {
-        assert(incData_ && "incData_ is null");
-        incData_->levelVar_ = v;
-        return *this;
-    }
+	ProgramBuilder& nextLevel(Var v) {
+		assert(incData_ && "incData_ is null");
+		incData_->levelVar_ = v;
+		return *this;
+	}
 
-    void setUnsafe(Var v);
+    //! Set a atom's safe property.
+    /*!
+     * \param val true if this atom cannot be supported by upper level rules in ivASP.
+     */
+    void setSafe(Var v, bool val);
 	//@}
 
 	/*!
@@ -947,7 +950,7 @@ private:
 //! An atom-node in a body-atom-dependency graph
 class PrgAtomNode : public PrgNode {
 public:
-    PrgAtomNode(bool unsafe_ = false): unsafe(unsafe_) {}
+    PrgAtomNode(bool safe_ = true): safe(safe_) {}
 
 	//! adds the atom-oriented nogoods to as a set of constraints to the solver.
 	/*
@@ -979,15 +982,15 @@ public:
 		posDep = a->posDep;
 		negDep = a->negDep;
 		preds  = a->preds;
-        unsafe = a->unsafe;
+        safe = a->safe;
 	}
 
-	inline void setUnsafe() { unsafe = true; }
+	void setSafe(bool v) { safe = v; }
 
 	VarVec    posDep;     // Bodies in which this atom occurs positively
 	VarVec    negDep;     // Bodies in which this atom occurs negatively
 	VarVec    preds;      // Bodies having this atom as head
-    bool      unsafe;     // true if this atom is supported progressively
+    bool      safe;       // false if this atom is supported progressively
 };
 //@}
 }

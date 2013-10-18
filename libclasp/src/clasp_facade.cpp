@@ -232,7 +232,7 @@ void ClaspFacade::solveIncremental(Input& problem, ClaspConfig& config, Incremen
 			config_->solve.reduce.setProblemSize(computeProblemSize());
 			setState(state_solve, event_state_enter);
 			assume.clear();
-			problem.getAssumptions(assume);
+			api()->getAssumptions(assume);
 			more_    = Clasp::solve(*config.solver, assume, config.solve); 
 			if (result_ == result_unknown && !more_) {
 				// initial assumptions are unsat

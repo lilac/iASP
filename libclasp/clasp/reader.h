@@ -48,7 +48,7 @@ public:
 	virtual Format format() const = 0;
 	virtual bool   read(Solver& s, ProgramBuilder* api, int numModels) = 0;
 	virtual MinimizeConstraint* getMinimize(Solver& s, ProgramBuilder* api, bool heu) = 0;
-	virtual void   getAssumptions(LitVec& a) = 0;
+	//virtual void   getAssumptions(LitVec& a) = 0;
 private:
 	Input(const Input&);
 	Input& operator=(const Input&);

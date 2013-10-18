@@ -187,6 +187,12 @@ bool Preprocessor::preprocessSimple(bool bodyEq) {
 			prg_->atoms_[*h]->preds.push_back(prg_->initialSupp_[i]);
 		}
 	}
+	// add a var for each unsafe atom, even if it's not supported.
+	for (AtomList::const_iterator it = prg_->atoms_.begin(); it != prg_->atoms_.end(); ++it) {
+	    if (!(*it)->hasVar() && !(*it)->safe) {
+	        (*it)->setLiteral(posLit(prg_->vars_.add(Var_t::atom_var)));
+	    }
+	}
 	if (bodyEq) {
 		std::pair<uint32, uint32> ignore;
 		for (VarVec::size_type i = 0; i < prg_->initialSupp_.size(); ++i) {

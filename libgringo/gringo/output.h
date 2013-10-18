@@ -24,6 +24,7 @@ class Output
 {
 private:
 	typedef std::map<Signature, bool> ShowMap;
+	typedef std::set<Signature> SigSet;
 	typedef std::set<Signature> ExternalSet;
 	typedef boost::ptr_vector<boost::nullable<Printer> > PrinterVec;
 public:
@@ -40,6 +41,7 @@ public:
 	virtual void doShow(uint32_t nameId, uint32_t arity, bool s) { (void)nameId; (void)arity; (void) s; }
 	bool show(uint32_t nameId, uint32_t arity);
 	void external(uint32_t nameId, uint32_t arity);
+	void dynamic(uint32_t nameId, uint32_t arity, bool v);
 	template<class P>
 	static bool expPrinter();
 	template<class T>
@@ -59,6 +61,7 @@ protected:
 	std::ostream *out_;
 	ShowMap       showMap_;
 	ExternalSet   external_;
+	SigSet     dynamic_; // dynamic supported predicates.
 	Storage      *s_;
 	bool          show_;
 //private:

@@ -143,6 +143,24 @@ void ClaspOutput::doFinalize()
 	for(uint32_t i = 0; i < atomUnnamed_.size(); i++) { if(atomUnnamed_[i]) { b_->setAtomName(i + lastUnnamed_, 0); } }
 	lastUnnamed_+= atomUnnamed_.size();
 	atomUnnamed_.clear();
+	// set dynamically supported atoms
+	if (dynamic_.size() > 0) {
+		for(DomainMap::const_iterator i = s_->domains().begin(); i != s_->domains().end(); ++i)
+		{
+			uint32_t nameId = i->second->nameId();
+			uint32_t arity  = i->second->arity();
+			uint32_t domId  = i->second->domId();
+			bool globExt = dynamic_.find(Signature(nameId, arity)) != dynamic_.end();
+			if(globExt)
+			{
+				if(newSymbols_.size() <= domId) newSymbols_.resize(domId + 1);
+				foreach(AtomRef &j, newSymbols_[domId])
+				{
+					b_->setSafe(j.first, false);
+				}
+			}
+		}
+	}
 }
 
 const LparseConverter::SymbolMap &ClaspOutput::symbolMap(uint32_t domId) const
@@ -168,10 +186,16 @@ iClaspOutput::iClaspOutput(bool shiftDisj)
 void iClaspOutput::initialize()
 {
 	if(!incUid_) { ClaspOutput::initialize(); }
-	else { b_->unfreeze(incUid_); }
+	else {
+		b_->unfreeze(incUid_);
+		// add a constraint rule to make previous level atom false.
+		b_->setCompute(incUid_, false);
+	}
 	// create a new uid
 	incUid_ = symbol();
 	b_->freeze(incUid_);
+	b_->nextLevel(incUid_);
+	// TODO: examine if this freeze and unfreeze pair can be removed.
 }
 
 int iClaspOutput::getIncAtom()

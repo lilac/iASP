@@ -1,0 +1,10 @@
+#incr K.
+col(1..K).
+color(X, C) :- node(X), col(C), not ncolor(X, C).
+ncolor(X, C) :- node(X), col(C), col(C1), color(X, C1), C != C1.
+:- color(X, C), color(Y, C), edge(X, Y).
+
+#dynamic ncolor/2.
+
+#hide.
+#show color/2.

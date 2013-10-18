@@ -47,3 +47,12 @@ void Output::external(uint32_t nameId, uint32_t arity)
 {
 	external_.insert(Signature(nameId, arity));
 }
+
+void Output::dynamic(uint32_t nameId, uint32_t arity, bool val)
+{
+    if (val) {
+        dynamic_.insert(Signature(nameId, arity));
+    } else {
+        dynamic_.erase(Signature(nameId, arity));
+    }
+}
