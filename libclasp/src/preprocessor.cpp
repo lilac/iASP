@@ -188,7 +188,8 @@ bool Preprocessor::preprocessSimple(bool bodyEq) {
 		}
 	}
 	// add a var for each unsafe atom, even if it's not supported.
-	for (AtomList::const_iterator it = prg_->atoms_.begin(); it != prg_->atoms_.end(); ++it) {
+	Var startAtom   = prg_->incData_?prg_->incData_->startAtom_ : 0;
+	for (AtomList::const_iterator it = prg_->atoms_.begin() + startAtom; it != prg_->atoms_.end(); ++it) {
 	    if (!(*it)->hasVar() && !(*it)->safe) {
 	        (*it)->setLiteral(posLit(prg_->vars_.add(Var_t::atom_var)));
 	    }

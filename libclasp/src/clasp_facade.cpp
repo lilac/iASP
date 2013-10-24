@@ -225,8 +225,8 @@ void ClaspFacade::solveIncremental(Input& problem, ClaspConfig& config, Incremen
 			result_ = result_unsat;
 			more_   = false;
 			continue;
-			/*reportSolution(*config.solver, *config.solve.enumerator(), true);
-			break;*/
+			reportSolution(*config.solver, *config.solve.enumerator(), true);
+			break;
 		}
 		else {
 			config_->solve.reduce.setProblemSize(computeProblemSize());
