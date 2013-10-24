@@ -386,7 +386,11 @@ Term *Parser::term(Val::Type t, const Loc &loc, uint32_t index)
 {
 	if(t == Val::ID)
 	{
-		if(iPart_ != IPART_BASE && index == iId_)
+		if(index == incr_)
+		{
+			return new IncrTerm(loc);
+		}
+		else if(iPart_ != IPART_BASE && index == iId_)
 		{
 			if(!iAdded_) { iLoc_ = loc; }
 			iAdded_ = true;
@@ -413,16 +417,7 @@ void Parser::incr(uint32_t index)
 
 Term *Parser::varTerm(const Loc &loc, uint32_t index)
 {
-    Term *res;
-    if(index == incr_)
-    {
-        res = new IncrTerm(loc);
-    }
-    else
-    {
-        res = new VarTerm(loc, index);
-    }
-    return res;
+    return new VarTerm(loc, index);
 }
 
 namespace
