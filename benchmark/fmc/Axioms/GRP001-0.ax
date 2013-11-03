@@ -1,0 +1,26 @@
+cnf(total_function2,axiom,
+    ( ~ product(X,Y,Z)
+    | ~ product(X,Y,W)
+    | W = Z )).
+
+cnf(left_identity,axiom,
+    ( product(identity,X,X) )).
+
+cnf(associativity1,axiom,
+    ( ~ product(X,Y,U)
+    | product(X,V,W)
+    | ~ product(U,Z,W)
+    | ~ product(Y,Z,V) )).
+
+cnf(total_function1,axiom,
+    ( product(X,Y,multiply(X,Y)) )).
+
+cnf(associativity2,axiom,
+    ( ~ product(X,Y,U)
+    | ~ product(X,V,W)
+    | product(U,Z,W)
+    | ~ product(Y,Z,V) )).
+
+cnf(right_identity,axiom,
+    ( product(X,identity,X) )).
+

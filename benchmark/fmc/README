@@ -1,0 +1,16 @@
+fmc2iasp is used for computing finite models of first-order formulas. It is 
+written in Python. The input formulas can be written in TPTP format. FM-Darwin
+is need for clausification and flattening of the input. iClingo is used for
+finding answer sets of the logic program formed by fmc2iasp. An answer set 
+represents a finite model of the input.
+
+fmc.lp is the theory-independent part of the encoding.
+
+An example usage for computing a finite model of theory in example.tptp is like:
+
+darwin -fd true -pfdp Exit example.tptp | fmc2iasp.py | cat fmc.lp - | iclingo
+
+In order to compute all finite models, you can use the following command line.
+
+darwin -fd true -pfdp Exit example.tptp | fmc2iasp.py | cat fmc.lp - | iclingo 0
+

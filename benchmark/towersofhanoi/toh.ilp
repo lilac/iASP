@@ -1,0 +1,21 @@
+#hide.
+#show put(M,N,T).
+
+#incr k.
+time(1..k).
+1{move(N,T)  : disk(N) : N > 3}1 :- time(T).
+1{where(N,T) : disk(N)}1 :- time(T).
+
+on(M,N,T) :- disk(M;N), move(M,T), where(N,T).
+on(M,N,T+1) :- disk(M;N), on(M,N,T), time(T+1), not move(M,T+1).
+
+:- disk(N), time(T-1), move(N,T-1), move(N,T).
+:- disk(M;N), on(M,N,T), move(N,T+1).
+:- disk(M;N), on(M,N,T), where(N,T+1).
+:- disk(M;N), on(M,N,T), M <= N.
+
+put(M,N,T) :- disk(M;N), move(M,T), where(N,T).
+
+:- goal_on(X,Y), not on(X,Y,k).
+
+on(X,Y,0) :- init_on(X,Y).

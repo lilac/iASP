@@ -1,0 +1,8 @@
+fof(divergence2,axiom,(
+    ! [X0,X1,X2] :
+      ( addition(domain(X0),addition(forward_diamond(X1,domain(X0)),domain(X2))) = addition(forward_diamond(X1,domain(X0)),domain(X2))
+     => addition(divergence(X1),forward_diamond(star(X1),domain(X2))) = addition(domain(X0),addition(divergence(X1),forward_diamond(star(X1),domain(X2)))) ) )).
+
+fof(divergence1,axiom,(
+    ! [X0] : forward_diamond(X0,divergence(X0)) = divergence(X0) )).
+

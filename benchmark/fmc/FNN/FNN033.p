@@ -1,0 +1,202 @@
+fof(co1,conjecture,(
+    ~ ~ ( ( ? [X11] :
+              ( ? [X12,X13,X14,X15,X16,X17,X18,X19] :
+                  ( of(X11,X14,X13)
+                  & city(X11,X13)
+                  & hollywood_placename(X11,X14)
+                  & placename(X11,X14)
+                  & chevy(X11,X15)
+                  & white(X11,X15)
+                  & dirty(X11,X15)
+                  & street(X11,X16)
+                  & lonely(X11,X16)
+                  & event(X11,X17)
+                  & present(X11,X17)
+                  & down(X11,X17,X16)
+                  & ! [X24] :
+                      ( member(X11,X24,X19)
+                     => ! [X25] :
+                          ( member(X11,X25,X12)
+                         => ? [X26] :
+                              ( event(X11,X26)
+                              & wear(X11,X26)
+                              & nonreflexive(X11,X26)
+                              & present(X11,X26)
+                              & patient(X11,X26,X24)
+                              & agent(X11,X26,X25) ) ) )
+                  & group(X11,X19)
+                  & ! [X27] :
+                      ( member(X11,X27,X19)
+                     => ( cheap(X11,X27)
+                        & black(X11,X27)
+                        & coat(X11,X27) ) )
+                  & ! [X23] :
+                      ( member(X11,X23,X18)
+                     => ( fellow(X11,X23)
+                        & young(X11,X23) ) )
+                  & group(X11,X18)
+                  & two(X11,X18)
+                  & ! [X20] :
+                      ( member(X11,X20,X18)
+                     => ? [X21,X22] :
+                          ( be(X11,X21,X20,X22)
+                          & in(X11,X22,X13)
+                          & state(X11,X21) ) )
+                  & in(X11,X17,X13)
+                  & barrel(X11,X17)
+                  & agent(X11,X17,X15)
+                  & old(X11,X15)
+                  & frontseat(X11,X13)
+                  & group(X11,X12) )
+              & actual_world(X11) )
+         => ? [U] :
+              ( ? [V,W,X,Y,Z,X1,X2] :
+                  ( city(U,X)
+                  & placename(U,W)
+                  & white(U,X)
+                  & old(U,X)
+                  & street(U,Y)
+                  & lonely(U,Y)
+                  & event(U,Z)
+                  & agent(U,Z,X)
+                  & present(U,Z)
+                  & barrel(U,Z)
+                  & down(U,Z,Y)
+                  & ! [X3] :
+                      ( ? [X4,X5] :
+                          ( be(U,X4,X3,X5)
+                          & in(U,X5,X)
+                          & state(U,X4) )
+                     <= member(U,X3,X1) )
+                  & two(U,X1)
+                  & ! [X7] :
+                      ( ! [X8] :
+                          ( member(U,X8,V)
+                         => ? [X9] :
+                              ( agent(U,X9,X8)
+                              & wear(U,X9)
+                              & nonreflexive(U,X9)
+                              & present(U,X9)
+                              & patient(U,X9,X7)
+                              & event(U,X9) ) )
+                     <= member(U,X7,X2) )
+                  & group(U,X2)
+                  & ! [X10] :
+                      ( ( coat(U,X10)
+                        & black(U,X10)
+                        & cheap(U,X10) )
+                     <= member(U,X10,X2) )
+                  & ! [X6] :
+                      ( member(U,X6,X1)
+                     => ( young(U,X6)
+                        & fellow(U,X6) ) )
+                  & group(U,X1)
+                  & in(U,Z,X)
+                  & dirty(U,X)
+                  & chevy(U,X)
+                  & hollywood_placename(U,W)
+                  & of(U,W,X)
+                  & frontseat(U,X)
+                  & group(U,V) )
+              & actual_world(U) ) )
+        & ( ? [U] :
+              ( ? [V,W,X,Y,Z,X1,X2] :
+                  ( city(U,X)
+                  & chevy(U,X)
+                  & old(U,X)
+                  & lonely(U,Y)
+                  & agent(U,Z,X)
+                  & in(U,Z,X)
+                  & two(U,X1)
+                  & ! [X6] :
+                      ( member(U,X6,X1)
+                     => ( fellow(U,X6)
+                        & young(U,X6) ) )
+                  & ! [X7] :
+                      ( member(U,X7,X2)
+                     => ! [X8] :
+                          ( member(U,X8,V)
+                         => ? [X9] :
+                              ( agent(U,X9,X8)
+                              & patient(U,X9,X7)
+                              & nonreflexive(U,X9)
+                              & wear(U,X9)
+                              & present(U,X9)
+                              & event(U,X9) ) ) )
+                  & ! [X10] :
+                      ( ( coat(U,X10)
+                        & black(U,X10)
+                        & cheap(U,X10) )
+                     <= member(U,X10,X2) )
+                  & group(U,X2)
+                  & group(U,X1)
+                  & ! [X3] :
+                      ( ? [X4,X5] :
+                          ( be(U,X4,X3,X5)
+                          & in(U,X5,X)
+                          & state(U,X4) )
+                     <= member(U,X3,X1) )
+                  & down(U,Z,Y)
+                  & barrel(U,Z)
+                  & present(U,Z)
+                  & event(U,Z)
+                  & street(U,Y)
+                  & dirty(U,X)
+                  & white(U,X)
+                  & placename(U,W)
+                  & hollywood_placename(U,W)
+                  & of(U,W,X)
+                  & frontseat(U,X)
+                  & group(U,V) )
+              & actual_world(U) )
+         => ? [X11] :
+              ( ? [X12,X13,X14,X15,X16,X17,X18,X19] :
+                  ( group(X11,X12)
+                  & frontseat(X11,X13)
+                  & of(X11,X14,X13)
+                  & hollywood_placename(X11,X14)
+                  & placename(X11,X14)
+                  & white(X11,X15)
+                  & dirty(X11,X15)
+                  & old(X11,X15)
+                  & agent(X11,X17,X15)
+                  & present(X11,X17)
+                  & ! [X23] :
+                      ( ( fellow(X11,X23)
+                        & young(X11,X23) )
+                     <= member(X11,X23,X18) )
+                  & ! [X24] :
+                      ( member(X11,X24,X19)
+                     => ! [X25] :
+                          ( ? [X26] :
+                              ( agent(X11,X26,X25)
+                              & present(X11,X26)
+                              & nonreflexive(X11,X26)
+                              & wear(X11,X26)
+                              & patient(X11,X26,X24)
+                              & event(X11,X26) )
+                         <= member(X11,X25,X12) ) )
+                  & ! [X27] :
+                      ( ( coat(X11,X27)
+                        & black(X11,X27)
+                        & cheap(X11,X27) )
+                     <= member(X11,X27,X19) )
+                  & group(X11,X19)
+                  & group(X11,X18)
+                  & two(X11,X18)
+                  & ! [X20] :
+                      ( ? [X21,X22] :
+                          ( be(X11,X21,X20,X22)
+                          & in(X11,X22,X13)
+                          & state(X11,X21) )
+                     <= member(X11,X20,X18) )
+                  & in(X11,X17,X13)
+                  & down(X11,X17,X16)
+                  & barrel(X11,X17)
+                  & event(X11,X17)
+                  & lonely(X11,X16)
+                  & street(X11,X16)
+                  & chevy(X11,X15)
+                  & city(X11,X13) )
+              & actual_world(X11) ) ) ) )).
+

@@ -1,0 +1,6 @@
+r(a); r(f(a)).
+s(X); t(X).
+p(f(X)); q(f(X)) :- r(a).
+p(f(X)) :- q(f(X)).
+q(f(X)) :- p(f(X)).
+false :- q(f(X)), p(f(X)).

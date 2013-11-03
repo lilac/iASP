@@ -1,0 +1,100 @@
+
+ifdef ZIP
+  ZIP_SRC = src/wrapper_enabled/zip_wrapper.ml
+  ZIP_INC = -I +$(ZIP)
+  ZIP_LIB = $(ZIP)
+else
+  ZIP_SRC = src/wrapper_disabled/zip_wrapper.ml
+endif
+
+
+INCLUDES := $(ZIP_INC)
+
+LIBS = unix $(ZIP_LIB)
+
+
+OCAMLMAKEFILE = OCamlMakefile
+
+OCAMLFLAGS := -w $(WARNING_FLAGS) -warn-error A $(INCLUDES)
+OCAMLLDFLAGS := -w $(WARNING_FLAGS) -warn-error A $(INCLUDES)
+OCAMLNCFLAGS := -inline 10
+OCAMLNLDFLAGS := -inline 10
+
+
+SOURCES = \
+	$(ZIP_SRC) \
+	src/print.ml \
+	src/const.ml \
+	src/tools.ml src/stack.ml src/heap.ml src/counter.ml \
+	src/var.ml src/symbol.ml src/term.ml \
+	src/problem.ml \
+	src/flags.ml src/config.ml \
+	src/statistic.ml \
+	src/parser_darwin.ml src/lexer_darwin.ml src/read_darwin.ml \
+	src/parser_tme.ml src/lexer_tme.ml src/read_tme.ml \
+	src/parser_tptp.ml src/lexer_tptp.ml src/read_tptp.ml \
+	src/equality.ml \
+	src/subst.ml src/term_attributes.ml src/unification.ml \
+	src/state.ml \
+	src/bound.ml src/jumping.ml \
+	src/term_indexing.ml src/discrimination_tree.ml \
+	src/preprocessing_unit.ml src/preprocessing_pure.ml \
+	src/preprocessing_split_nonground.ml src/preprocessing_split_ground.ml \
+	src/preprocessing_equality.ml \
+	src/preprocessing_resolution.ml \
+	src/sort_inference.ml \
+	src/finite_domain.ml \
+	src/finite_domain_constraints.ml \
+	src/context.ml src/context_unifier.ml \
+	src/context_unifier_check.ml src/admissible.ml \
+	src/context_unifier_search.ml \
+	src/problem_literals.ml \
+	src/context_unifier_space.ml \
+	src/selection_lookahead.ml \
+	src/selection_types.ml src/selection_assert.ml src/selection_split.ml \
+	src/lemma_propositional.ml \
+	src/lemma.ml src/selection.ml \
+	src/log.ml \
+	src/lemma_grounded.ml src/lemma_lifted.ml src/state_backtrack.ml \
+	src/darwin.ml
+
+
+
+
+RESULT = darwin
+
+
+TRASH = \
+	src/lexer_darwin.ml src/parser_darwin.ml src/parser_darwin.mli  \
+	src/lexer_tme.ml src/parser_tme.ml src/parser_tme.mli
+
+
+
+
+## DOCUMENTATION ##
+
+# remove the lexer and parser files from the documentation
+DOC_SOURCES = $(filter-out src/lexer_%.ml src/parser_%.ml,$(SOURCES))
+
+# remove the suffix
+DOC_BASES = $(subst .ml,,$(DOC_SOURCES))
+
+# replace every $file_name by $file_name.ml $file_name.mli
+DOC_FILES = $(shell for name in $(DOC_BASES); do\
+	echo $$name.ml $$name.mli;\
+	done)
+
+OCAMLDOCFLAGS = -I src -I src/wrapper_enabled/ -I src/wrapper_disabled/ -sort -v -keep-code -colorize-code
+
+
+
+## TARGETS ##
+
+# default target: native code
+default: nc
+
+all: nc doc
+
+
+
+-include $(OCAMLMAKEFILE)

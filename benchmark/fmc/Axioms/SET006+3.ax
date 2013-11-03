@@ -1,0 +1,98 @@
+fof(min,axiom,(
+    ! [R,E,M] :
+      ( ( member(M,E)
+        & ! [X] :
+            ( X = M
+           <= ( member(X,E)
+              & apply(R,X,M) ) ) )
+    <=> min(M,R,E) ) )).
+
+fof(greatest_lower_bound,axiom,(
+    ! [A,X,R,E] :
+      ( greatest_lower_bound(A,X,R,E)
+    <=> ( member(A,X)
+        & ! [M] :
+            ( apply(R,M,A)
+           <= ( member(M,E)
+              & lower_bound(M,R,X) ) )
+        & lower_bound(A,R,X) ) ) )).
+
+fof(greatest,axiom,(
+    ! [R,E,M] :
+      ( ( member(M,E)
+        & ! [X] :
+            ( apply(R,X,M)
+           <= member(X,E) ) )
+    <=> greatest(M,R,E) ) )).
+
+fof(least,axiom,(
+    ! [R,E,M] :
+      ( ( ! [X] :
+            ( member(X,E)
+           => apply(R,M,X) )
+        & member(M,E) )
+    <=> least(M,R,E) ) )).
+
+fof(lower_bound,axiom,(
+    ! [R,E,M] :
+      ( ! [X] :
+          ( apply(R,M,X)
+         <= member(X,E) )
+    <=> lower_bound(M,R,E) ) )).
+
+fof(total_order,axiom,(
+    ! [R,E] :
+      ( ( order(R,E)
+        & ! [X,Y] :
+            ( ( member(Y,E)
+              & member(X,E) )
+           => ( apply(R,X,Y)
+              | apply(R,Y,X) ) ) )
+    <=> total_order(R,E) ) )).
+
+fof(max,axiom,(
+    ! [R,E,M] :
+      ( ( ! [X] :
+            ( ( apply(R,M,X)
+              & member(X,E) )
+           => M = X )
+        & member(M,E) )
+    <=> max(M,R,E) ) )).
+
+fof(least_upper_bound,axiom,(
+    ! [A,X,R,E] :
+      ( least_upper_bound(A,X,R,E)
+    <=> ( ! [M] :
+            ( apply(R,A,M)
+           <= ( upper_bound(M,R,X)
+              & member(M,E) ) )
+        & upper_bound(A,R,X)
+        & member(A,X) ) ) )).
+
+fof(upper_bound,axiom,(
+    ! [R,E,M] :
+      ( ! [X] :
+          ( member(X,E)
+         => apply(R,X,M) )
+    <=> upper_bound(M,R,E) ) )).
+
+fof(order,axiom,(
+    ! [R,E] :
+      ( ( ! [X,Y,Z] :
+            ( ( member(Z,E)
+              & member(Y,E)
+              & member(X,E) )
+           => ( apply(R,X,Z)
+             <= ( apply(R,Y,Z)
+                & apply(R,X,Y) ) ) )
+        & ! [X,Y] :
+            ( ( member(Y,E)
+              & member(X,E) )
+           => ( X = Y
+             <= ( apply(R,X,Y)
+                & apply(R,Y,X) ) ) )
+        & ! [X] :
+            ( apply(R,X,X)
+           <= member(X,E) ) )
+    <=> order(R,E) ) )).
+

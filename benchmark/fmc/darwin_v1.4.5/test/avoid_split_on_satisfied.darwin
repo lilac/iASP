@@ -1,0 +1,61 @@
+% Usually generates this derivation:
+% 
+% START OF DERIVATION
+% [0] Depth bound: 2
+% [1] Split Left: +p(=0, =1, a, =2)
+% [2] Split Left: +p(a, =0, =1, =2)
+% [3] Split Left: -p(=0, a, a, =1)
+% [3] Unit Split: +u(=0, a, =1, b, b, b, b, b)
+% [4] Split Left: +p(a, a, a, =0)
+% [4] Unit Split: +t(a, =0, =1, b, b, b, b, b)
+% END OF DERIVATION
+% 
+% SATISFIABLE
+% 
+% START OF CONTEXT ('MODEL'):
+% +t(a, =0, =1, b, b, b, b, b)
+% +p(a, a, a, =0)
+% +u(=0, a, =1, b, b, b, b, b)
+% -p(=0, a, a, =1)
+% +p(a, =0, =1, =2)
+% +p(=0, =1, a, =2)
+% END OF CONTEXT
+% 
+%
+% the Split
+% [4] Split Left: +p(a, a, a, =0)
+% is not necessary though as +p(a, a, a, =0)
+% is already satisfied by the induced interpretation
+% 
+% avoiding splitting on satisfied literals yields:
+% 
+% START OF DERIVATION
+% [0] Depth bound: 2
+% [1] Split Left: +p(a, =0, =1, =2)
+% [2] Split Left: +p(=0, =1, a, =2)
+% [3] Split Left: -p(=0, a, a, =1)
+% [3] Unit Split: +u(=0, a, =1, b, b, b, b, b)
+% +p(a, a, a, =0) invalid as already satisified by +p(a, =0, =1, =2)
+% [4] Split Left: -p(a, a, a, =0)
+% [4] Unit Split: +r(=0, =1, =2, b, b, b, b, b)
+% [4] Unit Split: +s(a, a, =0, b, b, b, b, b)
+% END OF DERIVATION
+% 
+% SATISFIABLE
+% 
+% START OF CONTEXT ('MODEL'):
+% +s(a, a, =0, b, b, b, b, b)
+% +r(=0, =1, =2, b, b, b, b, b)
+% -p(a, a, a, =0)
+% +u(=0, a, =1, b, b, b, b, b)
+% -p(=0, a, a, =1)
+% +p(=0, =1, a, =2)
+% +p(a, =0, =1, =2)
+% END OF CONTEXT
+
+
+
+{ p(X, Y, a, Z), u(X, Y, Z, b, b, b, b, b) }
+{-p(X, a, a, Z), t(X, Y, Z, b, b, b, b, b) }
+{ p(a, X, Y, Z), s(X, Y, Z, b, b, b, b, b) }
+{ p(a, a, a, Z), r(X, Y, Z, b, b, b, b, b) }

@@ -1,0 +1,24 @@
+cnf(commutativity_of_multiply,axiom,
+    ( multiply(X,Y) = multiply(Y,X) )).
+
+cnf(distributivity2,axiom,
+    ( multiply(X,add(Y,Z)) = add(multiply(X,Y),multiply(X,Z)) )).
+
+cnf(additive_id1,axiom,
+    ( X = add(X,additive_identity) )).
+
+cnf(multiplicative_id1,axiom,
+    ( multiply(X,multiplicative_identity) = X )).
+
+cnf(additive_inverse1,axiom,
+    ( add(X,inverse(X)) = multiplicative_identity )).
+
+cnf(distributivity1,axiom,
+    ( add(X,multiply(Y,Z)) = multiply(add(X,Y),add(X,Z)) )).
+
+cnf(multiplicative_inverse1,axiom,
+    ( additive_identity = multiply(X,inverse(X)) )).
+
+cnf(commutativity_of_add,axiom,
+    ( add(X,Y) = add(Y,X) )).
+

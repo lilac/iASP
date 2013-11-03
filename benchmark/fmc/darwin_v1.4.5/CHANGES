@@ -1,0 +1,383 @@
+Version 1.4.5 - 10/06/2009
+==========================
+
+Fixes:
+
+- true/false no longer predefined constants (except in tme inputs)
+
+- computes finite model for all symbols, taking preprocessing into account
+
+
+Version 1.4.4 - 09/15/2008
+==========================
+
+- tme parser fix: false was not interpreted as 'false'
+
+- Finite model output uses domain name elements which are disjoint
+  from the input signature. Prev. it was just "ei" for the i.th element,
+  even if the input contained "ei".
+
+
+
+Version 1.4.3 - 05/08/2008
+==========================
+
+Fixes:
+
+- some tstp syntax fixes in output of finite model
+
+- finite domain elements are now calles fmdarwin_e0, fmdarwin_e1, ...
+  as the previous naming e0, e1, ... did sometimes conflict
+  with the input signature.
+  this is still an unsatisfying 'solution'.
+
+- disabled pureness preprocessing by default
+  pureness preprocessing may remove symbols from the input,
+  which leads them to being not considered in a generated model.
+  as preprocessing with eprover had the same effect,
+  eprover is now called with --no-preprocessing
+
+- tptp constants $true and $false were not fixed to be interpreted according 
+  to their intended meaning.
+
+
+Version 1.4.2 - 01/08/2008
+==========================
+
+Minor fixes:
+
+- maximum bound for iterative deepening can be given with the command line flag -mdb
+
+- in finite model finding mode all constants can be made disjoint
+  (unique name assumption) using the command line flag -una
+
+- if the -eprover flag does not point to eprover it is ignored and eprover is
+  instead looked for in darwin's directory and then in the usual system path
+  (by wish of Geoff Sutcliffe).
+
+- fixes in input/output of TPTP/TSTP syntax
+
+- fix in memory limit computation
+
+
+Version 1.4.1 - 07/01/2007
+==========================
+
+Output is SZS compliant:
+http://www.cs.miami.edu/~tptp/cgi-bin/DVTPTP2WWW/view_file.pl?Category=Documents&File=SZSOntology
+
+
+Version 1.4 - 05/16/2007
+========================
+
+This is the version described in the paper
+Peter Baumgartner, Alexander Fuchs, Hans de Nivelle, and Cesare Tinelli.
+Computing Finite Models by Reduction to Function-Free Clause Logic.
+Journal of Applied Logic, 2007.
+
+From the point of view of a user the only difference to the previous version
+is a modest performance improvement in the finite model finding mode.
+
+
+
+Version 1.3 - 07/16/2006
+========================
+
+This is a major release, in short:
+- support for the TPTP format, including FOF, and SZS Ontology
+- finite model finding mode, with output of models in TPTP format
+- lemma learning
+- added efficient preprocessing transformations
+- some minor performance and memory consumption improvements
+
+
+
+Features:
+---------
+
+- TPTP and SZS support
+  Darwin now accepts problems in the TPTP format (Version 3.1.1.27):
+  www.cs.miami.edu/~tptp/TPTP/SyntaxBNF.html
+
+  For non-clausal problems the eprover is used as a clausifier,
+  using the flag --eprover:
+  www.eprover.org
+
+  The status of the problem (Satisfiable, Theorem, ...)
+  as found by the system is output according to the SZS ontology:
+  www.cs.miami.edu/~tptp/cgi-bin/DVTPTP2WWW/view_file.pl?Category=Documents&File=SZSOntology
+
+- Finite Model Finder
+  Darwin can be used as a finite model finder,
+  using the flag --finite-domain.
+  The output can be represented as a TPTP formula, using --print-model-tptp:
+  www.cs.miami.edu/~tptp/TSTP/FiniteInterpretations.html
+
+- Lemma Learning
+  Several lemma learning methods (based on lemma learning in SAT solvers)
+  can be used, with the flag --lemma,
+  and several configuration flags -lemma-***.
+
+- Preprocessing:
+  Various methods to transform the input clause set:
+
+  --preprocess-split enables splitting of clauses into smaller clauses,
+    where the clause parts are connected by literals over the shared variables.
+    E.g. p(x, y), q(y, z) ---> p(x, y), s(y) /\ q(y, z), -s(y)
+
+  --preprocess-unit performs unit subsumption resolution to completion.
+    E.g. p(x) /\ -p(a), C -> replace -p(a), C by C
+    and  p(x) /\ p(a), C -> remove subsumed clause
+
+  --preprocess-pure removes pure literals from the clause set
+    (they are added to the context and thus the computed model)
+
+  --preprocess-resolution computes a small number of binary resolvents
+    between the input clauses, such that a resolvent is of size <= 3.
+
+  --preprocess-equality removes trivial tautologies like x = x,
+    and applies disequalities by replacing x != y \/ with C{x -> y}.
+
+- Memory Limit
+  A limit on the prover's memory consumption can be imposed with the flag
+  --memory-limit
+
+- Memory Consumption
+  Darwin manages (Assert) inference rule application candidates
+  similar to Waldmeister. Only the best n candidates are stored in memory,
+  the rest are recomputed on demand.
+
+  In practice this bounds the memory requirements in many cases.
+  It also makes the restarting method --restart Delayed more feasible,
+  as it no longer has to store all candidates exceeding the depth bound.
+  For finding satisfiable problems Delayed is now performing better than Lazy.
+
+
+Version 1.2 - 07/01/2005
+========================
+
+Switched to DARCS as the version control system.
+
+This version contains some minor optimizations wrt. version 1.1,
+but nothing major.
+
+It was only released because it participated in CASC20.
+
+
+Features:
+---------
+
+- Time Limit
+  A limit on the prover's runtime can be imposed with the flags
+  --timeout-cpu and --timeout-wc
+
+- Zipped Input
+  Problem files can be read from a zipped input file
+  using the flag --zipped-source.
+  
+  Requires the library camlzip to be installed.
+
+
+
+
+
+Version 1.1 - 12/28/2004
+=========================
+
+CVS tag: version-1.1
+
+
+Features:
+
+- New Restart strategies (see darwin -help)
+  The old one, which restarts eagerly,
+  a second one, which tries to backtrack along the branch to a choice point
+  where the derivation can be resumed and completed to find an exhausted branch,
+  and a third one, which does not eagerly drop candidates,
+  but only tests for exceeding candidates
+  when an 'exhausted' branch has been found,
+  and then backtracks and resumes the derivation.
+
+- Iterative Deepening over Term Weight
+  Provided as an alternative to Term Depth.
+
+- Horn
+  Negative candidate literals can be handled in several ways:
+  - ignored - they are not used at all.
+  - lookahead - they are merely used for the Close lookahead.
+  - use - they are used for all purposes just like the positive candidates.
+
+- Extended Close Look-ahead
+  It can be specified by a command line option
+  that all candidates are used for the Close look-ahead,
+  not only the candidates obeying the depth bound.
+
+- Equality Axiomatization
+  The predicate symbol '=' can be interpreted as the equality relation
+  by adding the axioms of equality needed for the problem specification.
+
+- Interface
+  Short and verbose interface (with backward incompatible flags),
+  integrating the new features.  
+
+- Input format
+  The input format is as previously deduced from the extension,
+  but now additionaly a default can be specified for an unknown extension.
+
+- DIG output
+  A prototypical implementation for printing a found model
+  in the DIG (Disjunctions of Implicit Generalizations) format.
+
+- Derivation Output
+  Various methods to print a derivation to stdout or a file,
+  in text or dot graph format.
+  Also, choice points with no impact on the derivation can be removed
+  from the printed derivation (experimental).
+
+- Default changes
+  Backjumping is used by default,
+  Mixed literals are used by default.
+
+
+
+Implementation:
+
+- Admissible
+  Admissible remainders with mixed literals were not always computed
+  in the most general form due to a relict of the earlier implementation
+  of parameter- or variable-free admissible remainders. Fixed.
+
+- Heavy Source Cleanup
+  effecting most modules.
+  Backtracking is handled more cleanly and solely within module state,
+  instead of in state as well as darwin.
+
+- Classes:
+  Classes are used for the first time in some new modules (flags, bound, log),
+  also transformed module term_indexing to a class.
+  This eases replacing one term indexing module with another.
+
+- Delayed computation of Split candidates
+  Split candidates are only computed
+  when no more Assert candidates are applicable,
+  that is for problems solvable by means of Assert only
+  no Split candidates are computed at all.
+
+- Inactive Candidates
+  There is no seperation between active and inactive candidates anymore.
+  Basically, the active candidates have been dropped
+  as a complication which didn't gain much in performance.
+
+- Performance:
+  Some minor performance optimizations (~5-10%),
+  mostly by instantiating some heavily parameterized core routines
+  (unification, context unifier computation) as modules.
+
+
+
+
+Version 1.0 - 09/22/2004
+========================
+
+CVS tag: master_thesis
+
+Version used for the evaluation in the master's thesis of Alexander Fuchs.
+
+
+Features:
+
+- Mixed context literals can be enabled with -umx
+
+
+
+Bug fixes:
+
+- Dynamic Backtracking was unsound:
+  Backtracking didn't remove _all_ right splits,
+  right splits not involved in closing unifiers were kept.
+
+
+
+Version CASC-J2 - 06/10/2004
+============================
+
+CVS tag: CASC-J2
+
+Participated in the CASC-J2 competition.
+
+Notable changes (based on the ESFOR-04 evaluation):
+
+Features:
+
+- NO SOLUTION is printed if darwin terminates without solving the problem.
+  this might happen if there are too many
+  - inactive candidates (> 4 000 000 on a 32 Bit processor)
+  - variables created on the fly (e.g. when making context unifiers admissible)
+  - skolem constants generated
+  In practice this doesn't happen anymore for any currently tested problem.
+
+- derivations can be output as graphs in the graphviz dot format,
+  see option -pdf
+
+- dynamic backtracking is now used by default instead of backjumping
+
+- interactive.py in the main directory starts darwin in an interactive
+  ocaml top level environment.
+  darwin's interactive capabilities are fairly restricted, though,
+  this is currently only useful for development/debugging.
+
+
+Implementation:
+
+- the term database (and binding database in Problem_literals)
+  is managed by weak pointers instead of reference counting.
+  this is slightly slower but significantly less intrusive
+  to code outside of the term module and much more fun to use.
+
+- added (non-perfect) discrimination trees implemented by John Wheeler
+
+- auto selection of the context indexing technique:
+  discrimination trees for Horn problems,
+  substitution trees for non-Horn problems.
+
+- inactive candidates are managed in a heap instead of a fifo,
+  thus the best and not the oldest inactive candidate is activated,
+  but more memory is needed as the comparison attributes must be kept.
+
+- lookahead of conflicting mandatory candidate literals,
+  i.e. Assert and Unit Split candidates.
+  it there are two contradictory candidates (one of which must be active)
+  one is immediately selected bypassing the heuristic,
+  causing the computation of a closing context unifier in the next phase.
+
+- optimization of a core function (Subst.get) leading to
+  performance gains of about 10%.
+
+- minor optimization for substitution tree requests
+  (the queries are now tail-recursive)
+
+- compacted literals are removed from the context term index,
+  previously they were only excluded from the computation of context unifiers.
+
+
+
+Bug fixes:
+
+- backtracking dependencies between states were incomplete.
+  (Split decisions were treated as dependency free as in propositional logic)
+
+
+
+
+
+Version ESFOR-04 - 04/27/2004
+=============================
+
+CVS tag: ESFOR-04
+
+The first fixed stable version of Darwin.
+Used for the TPTP Evaluation as published in the Darwin paper
+submitted for the ESFOR workshop at the IJCAR 2004:
+http://www.cs.miami.edu/~tptp/Workshops/ESFOR/
+
+See the paper for a detailed description of the implementation features.

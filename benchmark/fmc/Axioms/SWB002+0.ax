@@ -1,0 +1,676 @@
+fof(owl_parts_iodp_cond_inst,axiom,(
+    ! [X] :
+      ( ! [Y,Z] :
+          ( ( ir(Y)
+            & lv(Z) )
+         <= iext(X,Y,Z) )
+     <= iodp(X) ) )).
+
+fof(rdf_container_n_type_001,axiom,(
+    iext(uri_rdf_type,uri_rdf__1,uri_rdf_Property) )).
+
+fof(rdfs_container_containermembershipproperty_instsub_member,axiom,(
+    ! [P] :
+      ( icext(uri_rdfs_ContainerMembershipProperty,P)
+     => iext(uri_rdfs_subPropertyOf,P,uri_rdfs_member) ) )).
+
+fof(owl_prop_complementof_type,axiom,(
+    ip(uri_owl_complementOf) )).
+
+fof(rdfs_reification_predicate_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdf_predicate,uri_rdfs_Statement) )).
+
+fof(owl_prop_allvaluesfrom_ext,axiom,(
+    ! [X,Y] :
+      ( iext(uri_owl_allValuesFrom,X,Y)
+     => ( ic(Y)
+        & icext(uri_owl_Restriction,X) ) ) )).
+
+fof(rdfs_reification_predicate_range,axiom,(
+    iext(uri_rdfs_range,uri_rdf_predicate,uri_rdfs_Resource) )).
+
+fof(owl_parts_ioap_cond_inst,axiom,(
+    ! [X] :
+      ( ! [Y,Z] :
+          ( ( ir(Y)
+            & ir(Z) )
+         <= iext(X,Y,Z) )
+     <= ioap(X) ) )).
+
+fof(rdfs_range_range,axiom,(
+    iext(uri_rdfs_range,uri_rdfs_range,uri_rdfs_Class) )).
+
+fof(rdf_type_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_type,uri_rdf_Property) )).
+
+fof(owl_parts_ir_def,axiom,(
+    ! [X] :
+      ( ir(X)
+    <=> iext(uri_rdf_type,X,uri_rdfs_Resource) ) )).
+
+fof(owl_class_thing_type,axiom,(
+    ic(uri_owl_Thing) )).
+
+fof(owl_prop_intersectionof_ext,axiom,(
+    ! [X,Y] :
+      ( ( ic(X)
+        & icext(uri_rdf_List,Y) )
+     <= iext(uri_owl_intersectionOf,X,Y) ) )).
+
+fof(owl_prop_complementof_ext,axiom,(
+    ! [X,Y] :
+      ( ( ic(Y)
+        & ic(X) )
+     <= iext(uri_owl_complementOf,X,Y) ) )).
+
+fof(owl_parts_ir_cond_set,axiom,(
+    ? [X] : ir(X) )).
+
+fof(rdfs_type_range,axiom,(
+    iext(uri_rdfs_range,uri_rdf_type,uri_rdfs_Class) )).
+
+fof(owl_bool_unionof_class_003,axiom,(
+    ! [Z,S1,C1,S2,C2,S3,C3] :
+      ( ( ( ic(Z)
+          & ic(C1)
+          & ! [X] :
+              ( icext(Z,X)
+            <=> ( icext(C2,X)
+                | icext(C3,X)
+                | icext(C1,X) ) )
+          & ic(C3)
+          & ic(C2) )
+      <=> iext(uri_owl_unionOf,Z,S1) )
+     <= ( iext(uri_rdf_rest,S1,S2)
+        & iext(uri_rdf_rest,S2,S3)
+        & iext(uri_rdf_rest,S3,uri_rdf_nil)
+        & iext(uri_rdf_first,S3,C3)
+        & iext(uri_rdf_first,S2,C2)
+        & iext(uri_rdf_first,S1,C1) ) ) )).
+
+fof(owl_prop_unionof_ext,axiom,(
+    ! [X,Y] :
+      ( ( icext(uri_rdf_List,Y)
+        & ic(X) )
+     <= iext(uri_owl_unionOf,X,Y) ) )).
+
+fof(rdfs_reification_subject_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdf_subject,uri_rdfs_Statement) )).
+
+fof(rdfs_collection_rest_range,axiom,(
+    iext(uri_rdfs_range,uri_rdf_rest,uri_rdf_List) )).
+
+fof(owl_restrict_hasvalue,axiom,(
+    ! [Z,P,A] :
+      ( ! [X] :
+          ( iext(P,X,A)
+        <=> icext(Z,X) )
+     <= ( iext(uri_owl_onProperty,Z,P)
+        & iext(uri_owl_hasValue,Z,A) ) ) )).
+
+fof(owl_parts_ic_cond_set,axiom,(
+    ! [X] :
+      ( ir(X)
+     <= ic(X) ) )).
+
+fof(owl_parts_idc_def,axiom,(
+    ! [X] :
+      ( idc(X)
+    <=> iext(uri_rdf_type,X,uri_rdfs_Datatype) ) )).
+
+fof(owl_restrict_somevaluesfrom,axiom,(
+    ! [Z,P,C] :
+      ( ! [X] :
+          ( icext(Z,X)
+        <=> ? [Y] :
+              ( icext(C,Y)
+              & iext(P,X,Y) ) )
+     <= ( iext(uri_owl_someValuesFrom,Z,C)
+        & iext(uri_owl_onProperty,Z,P) ) ) )).
+
+fof(rdfs_subpropertyof_reflex,axiom,(
+    ! [P] :
+      ( ip(P)
+     => iext(uri_rdfs_subPropertyOf,P,P) ) )).
+
+fof(rdfs_range_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdfs_range,uri_rdf_Property) )).
+
+fof(rdf_collection_nil_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_nil,uri_rdf_List) )).
+
+fof(rdfs_container_seq_sub,axiom,(
+    iext(uri_rdfs_subClassOf,uri_rdfs_Seq,uri_rdfs_Container) )).
+
+fof(rdfs_subpropertyof_main,axiom,(
+    ! [P,Q] :
+      ( ( ! [X,Y] :
+            ( iext(P,X,Y)
+           => iext(Q,X,Y) )
+        & ip(Q)
+        & ip(P) )
+     <= iext(uri_rdfs_subPropertyOf,P,Q) ) )).
+
+fof(rdfs_dat_xmlliteral_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_XMLLiteral,uri_rdfs_Datatype) )).
+
+fof(rdfs_container_containermembershipproperty_sub,axiom,(
+    iext(uri_rdfs_subClassOf,uri_rdfs_ContainerMembershipProperty,uri_rdf_Property) )).
+
+fof(owl_rdfsext_subpropertyof,axiom,(
+    ! [P1,P2] :
+      ( ( ip(P2)
+        & ! [X,Y] :
+            ( iext(P1,X,Y)
+           => iext(P2,X,Y) )
+        & ip(P1) )
+    <=> iext(uri_rdfs_subPropertyOf,P1,P2) ) )).
+
+fof(rdfs_annotation_label_range,axiom,(
+    iext(uri_rdfs_range,uri_rdfs_label,uri_rdfs_Literal) )).
+
+fof(rdfs_subclassof_trans,axiom,(
+    ! [C,D,E] :
+      ( iext(uri_rdfs_subClassOf,C,E)
+     <= ( iext(uri_rdfs_subClassOf,C,D)
+        & iext(uri_rdfs_subClassOf,D,E) ) ) )).
+
+fof(owl_prop_somevaluesfrom_type,axiom,(
+    ip(uri_owl_someValuesFrom) )).
+
+fof(owl_class_thing_ext,axiom,(
+    ! [X] :
+      ( icext(uri_owl_Thing,X)
+    <=> ir(X) ) )).
+
+fof(rdfs_collection_first_range,axiom,(
+    iext(uri_rdfs_range,uri_rdf_first,uri_rdfs_Resource) )).
+
+fof(rdf_collection_rest_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_rest,uri_rdf_Property) )).
+
+fof(owl_bool_unionof_class_001,axiom,(
+    ! [Z,S1,C1] :
+      ( ( ( ! [X] :
+              ( icext(C1,X)
+            <=> icext(Z,X) )
+          & ic(C1)
+          & ic(Z) )
+      <=> iext(uri_owl_unionOf,Z,S1) )
+     <= ( iext(uri_rdf_rest,S1,uri_rdf_nil)
+        & iext(uri_rdf_first,S1,C1) ) ) )).
+
+fof(rdf_type_ip,axiom,(
+    ! [P] :
+      ( iext(uri_rdf_type,P,uri_rdf_Property)
+    <=> ip(P) ) )).
+
+fof(owl_parts_iodp_def,axiom,(
+    ! [X] :
+      ( iext(uri_rdf_type,X,uri_owl_DatatypeProperty)
+    <=> iodp(X) ) )).
+
+fof(rdfs_cext_def,axiom,(
+    ! [X,C] :
+      ( iext(uri_rdf_type,X,C)
+    <=> icext(C,X) ) )).
+
+fof(owl_parts_ip_cond_inst,axiom,(
+    ! [X] :
+      ( ip(X)
+     => ! [Y,Z] :
+          ( iext(X,Y,Z)
+         => ( ir(Z)
+            & ir(Y) ) ) ) )).
+
+fof(rdfs_type_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdf_type,uri_rdfs_Resource) )).
+
+fof(owl_parts_ioxp_def,axiom,(
+    ! [X] :
+      ( ioxp(X)
+    <=> iext(uri_rdf_type,X,uri_owl_OntologyProperty) ) )).
+
+fof(rdfs_collection_rest_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdf_rest,uri_rdf_List) )).
+
+fof(owl_prop_intersectionof_type,axiom,(
+    ip(uri_owl_intersectionOf) )).
+
+fof(owl_parts_ip_def,axiom,(
+    ! [X] :
+      ( iext(uri_rdf_type,X,uri_rdf_Property)
+    <=> ip(X) ) )).
+
+fof(owl_class_nothing_type,axiom,(
+    ic(uri_owl_Nothing) )).
+
+fof(rdfs_annotation_seealso_range,axiom,(
+    iext(uri_rdfs_range,uri_rdfs_seeAlso,uri_rdfs_Resource) )).
+
+fof(rdfs_annotation_seealso_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdfs_seeAlso,uri_rdfs_Resource) )).
+
+fof(rdfs_datatype_instsub_literal,axiom,(
+    ! [D] :
+      ( icext(uri_rdfs_Datatype,D)
+     => iext(uri_rdfs_subClassOf,D,uri_rdfs_Literal) ) )).
+
+fof(rdfs_lv_def,axiom,(
+    ! [X] :
+      ( icext(uri_rdfs_Literal,X)
+    <=> lv(X) ) )).
+
+fof(rdfs_container_n_domain_001,axiom,(
+    iext(uri_rdfs_domain,uri_rdf__1,uri_rdfs_Resource) )).
+
+fof(owl_prop_hasvalue_ext,axiom,(
+    ! [X,Y] :
+      ( iext(uri_owl_hasValue,X,Y)
+     => ( icext(uri_owl_Restriction,X)
+        & ir(Y) ) ) )).
+
+fof(rdfs_domain_main,axiom,(
+    ! [P,C,X,Y] :
+      ( ( iext(uri_rdfs_domain,P,C)
+        & iext(P,X,Y) )
+     => icext(C,X) ) )).
+
+fof(owl_parts_ioxp_cond_set,axiom,(
+    ! [X] :
+      ( ioxp(X)
+     => ip(X) ) )).
+
+fof(rdf_container_n_type_003,axiom,(
+    iext(uri_rdf_type,uri_rdf__3,uri_rdf_Property) )).
+
+fof(owl_parts_iodp_cond_set,axiom,(
+    ! [X] :
+      ( iodp(X)
+     => ip(X) ) )).
+
+fof(rdfs_subclassof_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdfs_subClassOf,uri_rdfs_Class) )).
+
+fof(rdfs_range_main,axiom,(
+    ! [P,C,X,Y] :
+      ( icext(C,Y)
+     <= ( iext(P,X,Y)
+        & iext(uri_rdfs_range,P,C) ) ) )).
+
+fof(owl_parts_ic_def,axiom,(
+    ! [X] :
+      ( ic(X)
+    <=> iext(uri_rdf_type,X,uri_rdfs_Class) ) )).
+
+fof(rdf_collection_first_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_first,uri_rdf_Property) )).
+
+fof(owl_bool_intersectionof_class_000,axiom,(
+    ! [Z] :
+      ( iext(uri_owl_intersectionOf,Z,uri_rdf_nil)
+    <=> ( ic(Z)
+        & ! [X] :
+            ( icext(Z,X)
+          <=> ir(X) ) ) ) )).
+
+fof(rdfs_container_n_range_001,axiom,(
+    iext(uri_rdfs_range,uri_rdf__1,uri_rdfs_Resource) )).
+
+fof(rdfs_subpropertyof_range,axiom,(
+    iext(uri_rdfs_range,uri_rdfs_subPropertyOf,uri_rdf_Property) )).
+
+fof(rdfs_value_range,axiom,(
+    iext(uri_rdfs_range,uri_rdf_value,uri_rdfs_Resource) )).
+
+fof(owl_parts_idc_cond_set,axiom,(
+    ! [X] :
+      ( idc(X)
+     => ic(X) ) )).
+
+fof(rdfs_class_instsub_resource,axiom,(
+    ! [C] :
+      ( iext(uri_rdfs_subClassOf,C,uri_rdfs_Resource)
+     <= ic(C) ) )).
+
+fof(rdfs_container_alt_sub,axiom,(
+    iext(uri_rdfs_subClassOf,uri_rdf_Alt,uri_rdfs_Container) )).
+
+fof(rdfs_annotation_comment_range,axiom,(
+    iext(uri_rdfs_range,uri_rdfs_comment,uri_rdfs_Literal) )).
+
+fof(rdfs_container_member_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdfs_member,uri_rdfs_Resource) )).
+
+fof(rdfs_container_n_type_001,axiom,(
+    iext(uri_rdf_type,uri_rdf__1,uri_rdfs_ContainerMembershipProperty) )).
+
+fof(owl_prop_hasvalue_type,axiom,(
+    ip(uri_owl_hasValue) )).
+
+fof(rdfs_container_bag_sub,axiom,(
+    iext(uri_rdfs_subClassOf,uri_rdf_Bag,uri_rdfs_Container) )).
+
+fof(owl_parts_ix_def,axiom,(
+    ! [X] :
+      ( ix(X)
+    <=> iext(uri_rdf_type,X,uri_owl_Ontology) ) )).
+
+fof(owl_prop_unionof_type,axiom,(
+    ip(uri_owl_unionOf) )).
+
+fof(rdf_reification_object_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_object,uri_rdf_Property) )).
+
+fof(rdfs_reification_object_range,axiom,(
+    iext(uri_rdfs_range,uri_rdf_predicate,uri_rdfs_Resource) )).
+
+fof(rdfs_annotation_comment_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdfs_comment,uri_rdfs_Resource) )).
+
+fof(owl_parts_ioxp_cond_inst,axiom,(
+    ! [X] :
+      ( ! [Y,Z] :
+          ( iext(X,Y,Z)
+         => ( ix(Y)
+            & ix(Z) ) )
+     <= ioxp(X) ) )).
+
+fof(rdfs_domain_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdfs_domain,uri_rdf_Property) )).
+
+fof(owl_parts_ic_cond_inst,axiom,(
+    ! [X] :
+      ( ic(X)
+     => ! [Y] :
+          ( ir(Y)
+         <= icext(X,Y) ) ) )).
+
+fof(rdfs_reification_subject_range,axiom,(
+    iext(uri_rdfs_range,uri_rdf_subject,uri_rdfs_Resource) )).
+
+fof(owl_prop_somevaluesfrom_ext,axiom,(
+    ! [X,Y] :
+      ( ( icext(uri_owl_Restriction,X)
+        & ic(Y) )
+     <= iext(uri_owl_someValuesFrom,X,Y) ) )).
+
+fof(rdfs_annotation_label_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdfs_label,uri_rdfs_Resource) )).
+
+fof(rdfs_property_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_Property,uri_rdfs_Class) )).
+
+fof(rdfs_subpropertyof_trans,axiom,(
+    ! [P,Q,R] :
+      ( ( iext(uri_rdfs_subPropertyOf,Q,R)
+        & iext(uri_rdfs_subPropertyOf,P,Q) )
+     => iext(uri_rdfs_subPropertyOf,P,R) ) )).
+
+fof(owl_parts_lv_cond_set,axiom,(
+    ! [X] :
+      ( lv(X)
+     => ir(X) ) )).
+
+fof(rdfs_container_member_range,axiom,(
+    iext(uri_rdfs_range,uri_rdfs_member,uri_rdfs_Resource) )).
+
+fof(rdfs_annotation_isdefinedby_sub,axiom,(
+    iext(uri_rdfs_subPropertyOf,uri_rdfs_isDefinedBy,uri_rdfs_seeAlso) )).
+
+fof(owl_rdfsext_subclassof,axiom,(
+    ! [C1,C2] :
+      ( ( ic(C2)
+        & ! [X] :
+            ( icext(C2,X)
+           <= icext(C1,X) )
+        & ic(C1) )
+    <=> iext(uri_rdfs_subClassOf,C1,C2) ) )).
+
+fof(owl_prop_onproperty_ext,axiom,(
+    ! [X,Y] :
+      ( iext(uri_owl_onProperty,X,Y)
+     => ( icext(uri_owl_Restriction,X)
+        & ip(Y) ) ) )).
+
+fof(rdfs_container_n_domain_003,axiom,(
+    iext(uri_rdfs_domain,uri_rdf__3,uri_rdfs_Resource) )).
+
+fof(owl_rdfsext_range,axiom,(
+    ! [P,C] :
+      ( iext(uri_rdfs_range,P,C)
+    <=> ( ip(P)
+        & ip(C)
+        & ! [X,Y] :
+            ( icext(C,Y)
+           <= iext(P,X,Y) ) ) ) )).
+
+fof(rdfs_subpropertyof_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdfs_subPropertyOf,uri_rdf_Property) )).
+
+fof(owl_bool_unionof_class_002,axiom,(
+    ! [Z,S1,C1,S2,C2] :
+      ( ( iext(uri_owl_unionOf,Z,S1)
+      <=> ( ic(C1)
+          & ! [X] :
+              ( ( icext(C2,X)
+                | icext(C1,X) )
+            <=> icext(Z,X) )
+          & ic(C2)
+          & ic(Z) ) )
+     <= ( iext(uri_rdf_rest,S1,S2)
+        & iext(uri_rdf_first,S2,C2)
+        & iext(uri_rdf_rest,S2,uri_rdf_nil)
+        & iext(uri_rdf_first,S1,C1) ) ) )).
+
+fof(simple_iext_property,axiom,(
+    ! [S,P,O] :
+      ( ip(P)
+     <= iext(P,S,O) ) )).
+
+fof(owl_bool_complementof_class,axiom,(
+    ! [Z,C] :
+      ( ( ic(Z)
+        & ic(C)
+        & ! [X] :
+            ( icext(Z,X)
+          <=> ~ icext(C,X) ) )
+     <= iext(uri_owl_complementOf,Z,C) ) )).
+
+fof(rdfs_annotation_isdefinedby_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdfs_isDefinedBy,uri_rdfs_Resource) )).
+
+fof(owl_bool_intersectionof_class_002,axiom,(
+    ! [Z,S1,C1,S2,C2] :
+      ( ( ( ic(C1)
+          & ic(C2)
+          & ! [X] :
+              ( icext(Z,X)
+            <=> ( icext(C2,X)
+                & icext(C1,X) ) )
+          & ic(Z) )
+      <=> iext(uri_owl_intersectionOf,Z,S1) )
+     <= ( iext(uri_rdf_first,S1,C1)
+        & iext(uri_rdf_rest,S1,S2)
+        & iext(uri_rdf_first,S2,C2)
+        & iext(uri_rdf_rest,S2,uri_rdf_nil) ) ) )).
+
+fof(rdfs_container_n_type_003,axiom,(
+    iext(uri_rdf_type,uri_rdf__3,uri_rdfs_ContainerMembershipProperty) )).
+
+fof(rdf_reification_subject_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_subject,uri_rdf_Property) )).
+
+fof(rdf_reification_predicate_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_value,uri_rdf_Property) )).
+
+fof(rdfs_subclassof_range,axiom,(
+    iext(uri_rdfs_range,uri_rdfs_subClassOf,uri_rdfs_Class) )).
+
+fof(rdfs_container_n_type_002,axiom,(
+    iext(uri_rdf_type,uri_rdf__2,uri_rdfs_ContainerMembershipProperty) )).
+
+fof(owl_bool_intersectionof_class_003,axiom,(
+    ! [Z,S1,C1,S2,C2,S3,C3] :
+      ( ( iext(uri_rdf_first,S1,C1)
+        & iext(uri_rdf_rest,S1,S2)
+        & iext(uri_rdf_rest,S3,uri_rdf_nil)
+        & iext(uri_rdf_first,S3,C3)
+        & iext(uri_rdf_rest,S2,S3)
+        & iext(uri_rdf_first,S2,C2) )
+     => ( iext(uri_owl_intersectionOf,Z,S1)
+      <=> ( ic(Z)
+          & ic(C2)
+          & ic(C3)
+          & ! [X] :
+              ( icext(Z,X)
+            <=> ( icext(C1,X)
+                & icext(C3,X)
+                & icext(C2,X) ) )
+          & ic(C1) ) ) ) )).
+
+fof(rdfs_ir_def,axiom,(
+    ! [X] :
+      ( ir(X)
+    <=> icext(uri_rdfs_Resource,X) ) )).
+
+fof(rdfs_container_n_range_003,axiom,(
+    iext(uri_rdfs_range,uri_rdf__3,uri_rdfs_Resource) )).
+
+fof(owl_parts_ioap_cond_set,axiom,(
+    ! [X] :
+      ( ip(X)
+     <= ioap(X) ) )).
+
+fof(owl_parts_lv_def,axiom,(
+    ! [X] :
+      ( iext(uri_rdf_type,X,uri_rdfs_Literal)
+    <=> lv(X) ) )).
+
+fof(simple_ir,axiom,(
+    ! [X] : ir(X) )).
+
+fof(owl_rdfsext_domain,axiom,(
+    ! [P,C] :
+      ( ( ! [X,Y] :
+            ( iext(P,X,Y)
+           => icext(C,X) )
+        & ic(C)
+        & ip(P) )
+    <=> iext(uri_rdfs_domain,P,C) ) )).
+
+fof(rdfs_dat_xmlliteral_sub,axiom,(
+    iext(uri_rdfs_subClassOf,uri_rdf_XMLLiteral,uri_rdfs_Literal) )).
+
+fof(owl_parts_ix_cond_set,axiom,(
+    ! [X] :
+      ( ir(X)
+     <= ix(X) ) )).
+
+fof(owl_class_nothing_ext,axiom,(
+    ! [X] : ~ icext(uri_owl_Nothing,X) )).
+
+fof(owl_bool_unionof_class_000,axiom,(
+    ! [Z] :
+      ( ( ! [X] : ~ icext(Z,X)
+        & ic(Z) )
+    <=> iext(uri_owl_unionOf,Z,uri_rdf_nil) ) )).
+
+fof(rdf_container_n_type_002,axiom,(
+    iext(uri_rdf_type,uri_rdf__2,uri_rdf_Property) )).
+
+fof(rdfs_datatype_sub,axiom,(
+    iext(uri_rdfs_subClassOf,uri_rdfs_Datatype,uri_rdfs_Class) )).
+
+fof(owl_parts_ip_cond_set,axiom,(
+    ! [X] :
+      ( ip(X)
+     => ir(X) ) )).
+
+fof(owl_bool_intersectionof_class_001,axiom,(
+    ! [Z,S1,C1] :
+      ( ( iext(uri_rdf_first,S1,C1)
+        & iext(uri_rdf_rest,S1,uri_rdf_nil) )
+     => ( ( ! [X] :
+              ( icext(C1,X)
+            <=> icext(Z,X) )
+          & ic(C1)
+          & ic(Z) )
+      <=> iext(uri_owl_intersectionOf,Z,S1) ) ) )).
+
+fof(rdfs_value_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdf_value,uri_rdfs_Resource) )).
+
+fof(owl_prop_allvaluesfrom_type,axiom,(
+    ip(uri_owl_allValuesFrom) )).
+
+fof(rdfs_annotation_isdefinedby_range,axiom,(
+    iext(uri_rdfs_range,uri_rdfs_isDefinedBy,uri_rdfs_Resource) )).
+
+fof(rdfs_collection_first_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdf_first,uri_rdf_List) )).
+
+fof(rdfs_container_n_range_002,axiom,(
+    iext(uri_rdfs_range,uri_rdf__2,uri_rdfs_Resource) )).
+
+fof(rdfs_subclassof_main,axiom,(
+    ! [C,D] :
+      ( iext(uri_rdfs_subClassOf,C,D)
+     => ( ic(D)
+        & ! [X] :
+            ( icext(C,X)
+           => icext(D,X) )
+        & ic(C) ) ) )).
+
+fof(rdfs_subclassof_reflex,axiom,(
+    ! [C] :
+      ( ic(C)
+     => iext(uri_rdfs_subClassOf,C,C) ) )).
+
+fof(rdfs_ic_def,axiom,(
+    ! [X] :
+      ( ic(X)
+    <=> icext(uri_rdfs_Class,X) ) )).
+
+fof(rdfs_container_n_domain_002,axiom,(
+    iext(uri_rdfs_domain,uri_rdf__2,uri_rdfs_Resource) )).
+
+fof(rdfs_domain_range,axiom,(
+    iext(uri_rdfs_range,uri_rdfs_domain,uri_rdfs_Class) )).
+
+fof(owl_prop_onproperty_type,axiom,(
+    ip(uri_owl_onProperty) )).
+
+fof(owl_restrict_allvaluesfrom,axiom,(
+    ! [Z,P,C] :
+      ( ! [X] :
+          ( ! [Y] :
+              ( icext(C,Y)
+             <= iext(P,X,Y) )
+        <=> icext(Z,X) )
+     <= ( iext(uri_owl_onProperty,Z,P)
+        & iext(uri_owl_allValuesFrom,Z,C) ) ) )).
+
+fof(owl_parts_ioap_def,axiom,(
+    ! [X] :
+      ( ioap(X)
+    <=> iext(uri_rdf_type,X,uri_owl_AnnotationProperty) ) )).
+
+fof(simple_lv,axiom,(
+    ! [X] :
+      ( ir(X)
+     <= lv(X) ) )).
+
+fof(rdf_value_type,axiom,(
+    iext(uri_rdf_type,uri_rdf_type,uri_rdf_Property) )).
+
+fof(owl_parts_idc_cond_inst,axiom,(
+    ! [X] :
+      ( ! [Y] :
+          ( lv(Y)
+         <= icext(X,Y) )
+     <= idc(X) ) )).
+
+fof(rdfs_reification_object_domain,axiom,(
+    iext(uri_rdfs_domain,uri_rdf_object,uri_rdfs_Statement) )).
+

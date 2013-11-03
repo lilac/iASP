@@ -1,0 +1,24 @@
+thf(rel_d_type,type,(
+    rel_d: $i > $i > $o )).
+
+thf(mbox_d_type,type,(
+    mbox_d: ( $i > $o ) > $i > $o )).
+
+thf(mbox_d,definition,
+    ( mbox_d
+    = ( ^ [Phi: $i > $o,W: $i] :
+        ! [V: $i] :
+          ( ~ ( rel_d @ W @ V )
+          | ( Phi @ V ) ) ) )).
+
+thf(mdia_d_type,type,(
+    mdia_d: ( $i > $o ) > $i > $o )).
+
+thf(mdia_d,definition,
+    ( mdia_d
+    = ( ^ [Phi: $i > $o] :
+          ( mnot @ ( mbox_d @ ( mnot @ Phi ) ) ) ) )).
+
+thf(a1,axiom,
+    ( mserial @ rel_d )).
+

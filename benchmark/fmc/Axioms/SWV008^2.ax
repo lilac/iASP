@@ -1,0 +1,8 @@
+thf(icl_impl_princ_type,type,(
+    icl_impl_princ: ( $i > $o ) > ( $i > $o ) > $i > $o )).
+
+thf(icl_impl_princ,definition,
+    ( icl_impl_princ
+    = ( ^ [A: $i > $o,B: $i > $o] :
+          ( mbox @ rel @ ( mimpl @ A @ B ) ) ) )).
+

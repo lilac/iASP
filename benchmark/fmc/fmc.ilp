@@ -1,0 +1,9 @@
+#incr k.
+
+dom(1..k).
+
+assign(F, V) :- func(F), dom(V), not nassign(F, V).
+assign(D, V) :- cons(D), dom(V), order(D,O), O>=V, not nassign(D,V).
+nassign(D, V) :- assign(D, V1), dom(V), V != V1.
+
+#dynamic nassign/2.

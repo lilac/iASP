@@ -1,0 +1,5 @@
+% only solved by restart strategy 'Reluctant' within depth 2
+p(X), q(X).
+p(f(f(a))) <- p(X).
+q(f(f(a))) <- q(X).
+

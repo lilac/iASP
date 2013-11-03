@@ -1,0 +1,39 @@
+%%%%%%
+#incr k.
+
+% undirected edges and node degrees
+edge(Y,X) :- edge(X,Y).
+degree(X,D) :- node(X), D := #count{ Y != X : edge(X,Y) }.
+
+% total node order (configurable whether by increasing or decreasing degree)
+#const ord = -1.
+next(X,Y) :- degree(X,DX;;Y,DY), (ord*DX,X) < (ord*DY,Y),
+             (ord*DZ,Z) <= (ord*DX,X) : degree(Z,DZ) : (ord*DZ,Z) < (ord*DY,Y).
+numb(X,1) :- (_,X) := #min[ degree(Y,DY) = (ord*DY,Y) ].
+numb(Y,N+1) :- numb(X,N), next(X,Y).
+
+% generate (unique) color assignment
+col(1..k).
+ :- not color(X, 1), numb(X, 1).
+color(X, C) :- col(C), numb(X, N),
+               not ncolor(X, C).
+
+ncolor(X, C) :- color(X, C1), col(C), C != C1.
+
+% enforce the smallest available color.
+ :- color(X, C), numb(X, N), col(C), C > 2,
+                #max[ color(Y, D) = D : col(D) : numb(Y, M) : M < N ] C - 2.
+
+% symmetry breaking
+%allow(Y, C + 1) :- color(X, C), next(X, Y), 1 < C.
+%allow(Y, C) :- allow(X, C), next(X, Y).
+% :- color(X, C), not allow(X, C), 2 < C.
+
+% edge constraint
+ :- edge(X, Y), color(X, C), color(Y, C).
+
+#dynamic ncolor/2.
+
+% output projection
+#hide.
+#show color/2.

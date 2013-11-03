@@ -1,0 +1,54 @@
+PREREQUISITES
+=============
+
+Required:
+---------
+
+- OCaml 3.09 or higher: caml.inria.fr
+Darwin is implemented in OCaml, so the OCaml native code compilers are needed.
+
+- Unix
+Darwin runs where OCaml runs, i.e. on for various Unix variants and Windows.
+For Windows see the official explanation of how to compile OCampl software
+at  http://caml.inria.fr/ocaml/release.en.html.
+In short, cygwin and mingw is needed, then a self contained binary
+can installed using the same procedure as in the Linux version.
+
+
+Optional:
+--------
+
+- eprover 0.91 or higher: www.eprover.org
+Darwin understands only clausal input,
+it uses the eprover as a clausifier for non-clausal tptp input.
+
+- python 2.3 or higher: www.python.org
+the configure script (configure.py) which creates the Makefile requires python.
+Alternatively, Makefile.default should be ready to use in most cases.
+
+
+
+INSTALLATION
+============
+In the top directory do:
+
+	python ./configure.py
+
+this creates a Makefile which should work on your platform.
+
+
+	make
+
+to build the native code version of Darwin.
+Darwin consists of the single file 'darwin' in the top directory.
+
+
+	make htdoc
+
+to build the source code interface documentation as html in doc/darwin/html/
+
+Note: 'make psdoc' and 'make pdfdoc' create the documentation
+as a postscript resp. pdf file in doc/darwin/latex/doc.{ps,pdf}.
+'make doc' builds the documentation in all formats.
+
+'make all' is equivalent to 'make && make doc'

@@ -1,0 +1,13 @@
+fof(cup1,axiom,(
+    ! [X,Y,Z] :
+      ( ( convergent_lines(Y,Z)
+        | apart_point_and_line(X,Z)
+        | apart_point_and_line(X,Y) )
+     <= distinct_lines(Y,Z) ) )).
+
+fof(cp1,axiom,(
+    ! [X,Y] : ~ convergent_lines(parallel_through_point(Y,X),Y) )).
+
+fof(cp2,axiom,(
+    ! [X,Y] : ~ apart_point_and_line(X,parallel_through_point(Y,X)) )).
+

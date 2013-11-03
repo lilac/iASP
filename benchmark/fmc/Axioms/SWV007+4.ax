@@ -1,0 +1,46 @@
+fof(ax55,axiom,(
+    ! [U,V,W,X,Y] : insert_pq(i(triple(U,V,W)),X) = i(triple(U,insert_slb(V,pair(X,Y)),W)) )).
+
+fof(ax60,axiom,(
+    ! [U,V] :
+      ( ( issmallestelement_pq(U,V)
+        & contains_pq(U,V) )
+    <=> pi_sharp_removemin(U,V) ) )).
+
+fof(ax54,axiom,(
+    ! [U,V] : i(triple(U,create_slb,V)) = create_pq )).
+
+fof(ax61,axiom,(
+    ! [U] :
+      ( pi_removemin(U)
+    <=> ? [V] : pi_sharp_find_min(i(U),V) ) )).
+
+fof(ax57,axiom,(
+    ! [U,V] :
+      ( pi_sharp_remove(i(U),V)
+    <=> pi_remove(U,V) ) )).
+
+fof(ax62,axiom,(
+    ! [U] :
+      ( ? [V] :
+          ( succ_cpq(U,V)
+          & ok(V)
+          & check_cpq(V) )
+    <=> phi(U) ) )).
+
+fof(ax56,axiom,(
+    ! [U,V] :
+      ( contains_pq(U,V)
+    <=> pi_sharp_remove(U,V) ) )).
+
+fof(ax58,axiom,(
+    ! [U,V] :
+      ( ( contains_pq(U,V)
+        & issmallestelement_pq(U,V) )
+    <=> pi_sharp_find_min(U,V) ) )).
+
+fof(ax59,axiom,(
+    ! [U] :
+      ( pi_find_min(U)
+    <=> ? [V] : pi_sharp_find_min(i(U),V) ) )).
+

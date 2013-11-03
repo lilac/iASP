@@ -1,0 +1,17 @@
+cnf(divide_and_equal,axiom,
+    ( divide(X,Y) != zero
+    | Y = X
+    | divide(Y,X) != zero )).
+
+cnf(quotient_property,axiom,
+    ( zero = divide(divide(divide(X,Z),divide(Y,Z)),divide(divide(X,Y),Z)) )).
+
+cnf(identity_is_largest,axiom,
+    ( divide(X,identity) = zero )).
+
+cnf(zero_is_smallest,axiom,
+    ( zero = divide(zero,X) )).
+
+cnf(quotient_smaller_than_numerator,axiom,
+    ( divide(divide(X,Y),X) = zero )).
+

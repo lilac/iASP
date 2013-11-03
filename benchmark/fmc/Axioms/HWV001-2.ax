@@ -1,0 +1,44 @@
+cnf(fulladder_connection_in1_in1h2,axiom,
+    ( connection(in(n1,X),in(n1,h2(X)))
+    | ~ type(X,fulladder) )).
+
+cnf(fulladder_or1,axiom,
+    ( type(or1(X),or)
+    | ~ type(X,fulladder) )).
+
+cnf(fulladder_connection_outc_out1or1,axiom,
+    ( ~ type(X,fulladder)
+    | connection(out(c,X),out(n1,or1(X))) )).
+
+cnf(fulladder_halfadder2,axiom,
+    ( type(h2(X),halfadder)
+    | ~ type(X,fulladder) )).
+
+cnf(fulladder_connection_outs_outsh2,axiom,
+    ( connection(out(s,X),out(s,h2(X)))
+    | ~ type(X,fulladder) )).
+
+cnf(fulladder_connection_in2_in1h1,axiom,
+    ( ~ type(X,fulladder)
+    | connection(in(n2,X),in(n1,h1(X))) )).
+
+cnf(fulladder_connection_inc_in2h1,axiom,
+    ( connection(in(c,X),in(n2,h1(X)))
+    | ~ type(X,fulladder) )).
+
+cnf(fulladder_connection_outch2_in1or1,axiom,
+    ( ~ type(X,fulladder)
+    | connection(out(c,h2(X)),in(n1,or1(X))) )).
+
+cnf(fulladder_connection_outch1_in2or1,axiom,
+    ( connection(out(c,h1(X)),in(n2,or1(X)))
+    | ~ type(X,fulladder) )).
+
+cnf(fulladder_halfadder1,axiom,
+    ( ~ type(X,fulladder)
+    | type(h1(X),halfadder) )).
+
+cnf(fulladder_connection_outsh1_in2h2,axiom,
+    ( connection(out(s,h1(X)),in(n2,h2(X)))
+    | ~ type(X,fulladder) )).
+

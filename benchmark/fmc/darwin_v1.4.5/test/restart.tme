@@ -1,0 +1,4 @@
+% not solved by restart strategy 'Eager' within depth 2
+p(X), q(X).
+r(f(f(a))) <- p(X).
+
